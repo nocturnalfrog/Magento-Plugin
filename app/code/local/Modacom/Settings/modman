@@ -1,0 +1,3 @@
+# My_Module, just an example
+code                   app/code/local/Modacom/Settings/
+Modacom_Settings.xml          app/etc/modules/Modacom_Settings.xml
