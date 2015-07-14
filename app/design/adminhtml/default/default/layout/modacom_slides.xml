@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<layout>
-    
-    <slide_adminhtml_slide_index>
-        <reference name="content">
-            <block type="modacom_slide/adminhtml_slide" name="slide" />
-        </reference>
-    </slide_adminhtml_slide_index>
-</layout>

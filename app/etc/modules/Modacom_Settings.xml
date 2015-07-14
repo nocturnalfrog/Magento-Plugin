@@ -1,8 +1,0 @@
-<config>
-    <modules>
-        <Modacom_Settings>
-            <active>true</active>
-            <codePool>local</codePool>
-        </Modacom_Settings>
-    </modules>
-</config>
