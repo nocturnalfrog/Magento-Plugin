@@ -1,0 +1,38 @@
+<?php $helper = Mage::helper('modacom_slide') ?>
+<?php $mode = $helper->getMode(); ?>
+<?php $slides = $this->getSlides() ?>
+<?php $count = count($slides); ?>
+<?php if ($mode == "banner"): ?>
+	<?php $slide = $this->getSlide() ?>
+	<?php if ($slide): ?>
+		<div class="banner">
+			<img src="<?php echo $slide->getImageUrl() ?>" style="width:100%" alt="<?php echo $slide->getTitle() ?>" />
+		</div>
+	<?php endif ?>
+<?php else: ?>
+	<?php if ($count > 1): ?><div class="owl-carousel"><?php endif; ?>
+	<?php foreach ($slides as $slide): ?>
+		<div class="item">
+			<?php if ($slide->getUrl()): ?>
+			<a href="<?php echo $slide->getUrl(); ?>"<?php if($slide->getNewWindow()) : ?> target="_blank"<?php endif; ?>>
+                <img src="<?php echo $slide->getImageUrl() ?>" alt="<?php echo $slide->getTitle() ?>" />
+            </a>
+        	<?php else: ?>
+            <img src="<?php echo $slide->getImageUrl() ?>" alt="<?php echo $slide->getTitle() ?>" />
+			<?php endif ?>
+		</div>
+	<?php endforeach ?>
+	<?php if ($count): ?>
+		</div>
+		<script>
+		jQuery(function($) {
+			$('.owl-carousel').owlCarousel({
+				singleItem: true,
+				pagination: <?php echo $helper->hasShowDots() ? "true" : "false"; ?>, // Show dots controls
+				navigation : <?php echo $helper->hasShowArrows() ? "true" : "false"; ?>, // Show next and prev buttons
+				autoHeight : true,
+			});
+		});
+		</script>
+	<?php endif ?>
+<?php endif ?>

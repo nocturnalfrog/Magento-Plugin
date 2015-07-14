@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <tabs>
+        <modacom_settings translate="label" module="modacom_settings">
+            <label>Modacom Settings</label>
+            <sort_order>0</sort_order>
+        </modacom_settings>
+    </tabs>
+    <sections>
+        <modacom_slide_tab module="modacom_settings">
+            <label>Slide Settings</label>
+            <sort_order>20</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <tab>modacom_settings</tab>
+            <groups>
+                <settings>
+                    <label>General settings</label>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable>
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <enable_jquery>
+                            <label>Add jQuery library</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable it if there is no jQuery library enabled</comment>
+                            <depends><enable>1</enable></depends>
+                        </enable_jquery>
+                        <enable_multiple_slides>
+                            <label>Enable multiple slides per page</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Show slider or separate slide</comment>
+                            <depends><enable>1</enable></depends>
+                        </enable_multiple_slides>
+                        <show_arrows>
+                            <label>Show arrow controls for slider</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><enable>1</enable></depends>
+                        </show_arrows>
+                        <show_dots>
+                            <label>Show dots controls for slider</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><enable>1</enable></depends>
+                        </show_dots>
+                    </fields>
+                </settings>
+            </groups>
+        </modacom_slide_tab>
+    </sections>
+</config>

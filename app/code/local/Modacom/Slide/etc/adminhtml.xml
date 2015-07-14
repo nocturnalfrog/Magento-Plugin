@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <cms>
+                        <children>
+                            <slide module="modacom_slide" translate="label">
+                                <title>Slides</title>
+                                <sort_order>3</sort_order>
+                            </slide>
+                        </children>
+                    </cms>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <modacom_slide_tab>
+                                        <title>Slide Settings Tab</title> 
+                                    </modacom_slide_tab>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

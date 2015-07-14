@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <default>
+        <reference name="head">
+            <action method="addJs" ifconfig="modacom_slide_tab/settings/enable_jquery"><script>modacom/jquery-1.11.0.min.js</script></action>
+            <action method="addItem" ifconfig="modacom_slide_tab/settings/enable"><type>skin_js</type><name>js/slide/owl.carousel.min.js</name></action>
+            <action method="addItem" ifconfig="modacom_slide_tab/settings/enable"><type>skin_css</type><name>css/slide/owl.carousel.css</name></action>
+            <action method="addItem" ifconfig="modacom_slide_tab/settings/enable"><type>skin_css</type><name>css/slide/owl.theme.css</name></action>
+        </reference>
+    </default>
+
+    <cms_index_index>
+        <reference name="content">
+            <block type="modacom_slide/slide" name="modacom.slide" template="modacom/slides/slides.phtml" before="-">
+                <action method="setUrlKey"><key>home</key></action>
+            </block>
+        </reference>
+    </cms_index_index>
+
+    <catalog_category_layered>
+        <reference name="content">
+            <block type="modacom_slide/slide" name="modacom.slide" template="modacom/slides/slides.phtml" before="-" />
+        </reference>
+    </catalog_category_layered>
+    
+    <catalog_category_default>
+        <reference name="content">
+            <block type="modacom_slide/slide" name="modacom.slide" template="modacom/slides/slides.phtml" before="-" />
+        </reference>
+    </catalog_category_default>
+
+    <cms_page_view>
+        <reference name="content">
+            <block type="modacom_slide/slide" name="modacom.slide" template="modacom/slides/slides.phtml" before="-" />
+        </reference>
+    </cms_page_view>
+</layout>
