@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout version="0.1.0">
+
+    <default>
+        <reference name="head">
+            <block type="metrilo_analytics/head" name="metrilo.analytics" template="metrilo/head.phtml" />
+        </reference>
+    </default>
+
+</layout>

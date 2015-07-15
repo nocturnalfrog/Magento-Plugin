@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- API Token:  323dce8d65d9ca75 -->
+<!-- API Secret: fda173fcb7f26081aa78dace -->
+<!-- 
+/**
+ * @package    Metrilo_Analytics
+ * @author     Miroslav Petrov, Modacom <miroslav.petrov@modacom.com>
+ */
+ -->
+<config>
+    <modules>
+        <Metrilo_Analytics>
+            <version>0.1.0</version>
+        </Metrilo_Analytics>
+    </modules>
+    <frontend>
+    	<layout>
+            <updates>
+                <metrilo_analytics>
+                    <file>metrilo_analytics.xml</file>
+                </metrilo_analytics>
+            </updates>
+        </layout>
+    </frontend>
+    <global>
+    	<blocks>
+            <metrilo_analytics>
+                <class>Metrilo_Analytics_Block</class>
+            </metrilo_analytics>
+        </blocks>
+        <helpers>
+            <metrilo_analytics>
+                <class>Metrilo_Analytics_Helper</class>
+            </metrilo_analytics>
+        </helpers>
+    </global>
+</config>

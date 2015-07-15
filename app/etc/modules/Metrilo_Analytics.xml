@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<config>
+    <modules>
+        <Metrilo_Analytics>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Metrilo_Analytics>
+    </modules>
+</config>

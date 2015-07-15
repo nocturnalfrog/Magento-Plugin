@@ -1,0 +1,4 @@
+app/code/local/Metrilo/Analytics/* app/code/local/Metrilo/Analytics/
+app/etc/modules/Metrilo_Analytics.xml          app/etc/modules/Metrilo_Analytics.xml
+app/design/frontend/base/default/layout/metrilo_analytics.xml app/design/frontend/base/default/layout/metrilo_analytics.xml
+app/design/frontend/base/default/template/metrilo/head.phtml app/design/frontend/base/default/template/metrilo/head.phtml
