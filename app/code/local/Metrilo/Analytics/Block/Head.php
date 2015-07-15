@@ -6,5 +6,5 @@
  */
 class Metrilo_Analytics_Block_Head extends Mage_Core_Block_Template
 {
-	
+    
 }
