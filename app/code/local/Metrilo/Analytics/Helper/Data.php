@@ -37,6 +37,13 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
         return Mage::getStoreConfig('metrilo_analytics_settings/settings/api_secret');
     }
 
+    /**
+     * Add event to queue
+     * 
+     * @param string $method Can be identiy|track
+     * @param string $type
+     * @param string|array $data
+     */
     public function addEvent($method, $type, $data)
     {
         $events = (array)$this->getSession()->getData(Metrilo_Analytics_Block_Head::DATA_TAG);
