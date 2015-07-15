@@ -8,6 +8,16 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
 {
 
     /**
+     * Get session instance
+     * 
+     * @return Mage_Core_Model_Session
+     */
+    public function getSession()
+    {
+        return Mage::getSingleton('core/session');
+    }
+
+    /**
      * Get API Token from system configuration
      * 
      * @return string
@@ -25,5 +35,15 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
     public function getApiSecret()
     {
         return Mage::getStoreConfig('metrilo_analytics_settings/settings/api_secret');
+    }
+
+    public function addEvent($type, $data)
+    {
+        $events = (array)$this->getSession()->getData(Metrilo_Analytics_Block_Head::DATA_TAG);
+        $events[] = array(
+            'type' => $type,
+            'data' => $data,
+        );
+        $this->getSession()->setData(Metrilo_Analytics_Block_Head::DATA_TAG, $events);
     }
 }

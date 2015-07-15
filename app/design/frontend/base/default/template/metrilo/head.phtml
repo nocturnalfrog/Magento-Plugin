@@ -1,10 +1,16 @@
 <?php $helper = Mage::helper('metrilo_analytics'); ?>
+<?php $events = $this->getEvents(); ?>
 <script type="text/javascript">
 window.metrilo||(window.metrilo=[]),window.metrilo.queue=[],window.metrilo.methods=["identify","track","event","pageview","purchase","debug","atr"],
 window.metrilo.skelet=function(e){return function(){a=Array.prototype.slice.call(arguments);a.unshift(e);window.metrilo.queue.push(a)}};
 for(var i=0;window.metrilo.methods.length>i;i++){var mthd=window.metrilo.methods[i];window.metrilo[mthd]=window.metrilo.skelet(mthd)}
 window.metrilo.load=function(e){var t=document,n=t.getElementsByTagName("script")[0],r=t.createElement("script");
 r.type="text/javascript";r.async=true;r.src="//t.metrilo.com/j/"+e+".js";n.parentNode.insertBefore(r,n)};
-metrilo.load("<?php echo $helper->getApiToken(); ?>");1
+metrilo.load("<?php echo $helper->getApiToken(); ?>");
 /* TODO:  Render other js lines here */
+<?php foreach ($events as $event) : ?>
+    <?php if($event['type'] == 'identify') : ?>
+    metrilo.identify("<?php echo $event['data']['id']?>", <?php echo json_encode($event['data']['params']); ?>);
+    <?php endif; ?>
+<?php endforeach; ?>
 </script>

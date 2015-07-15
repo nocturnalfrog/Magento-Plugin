@@ -3,7 +3,7 @@
 
     <default>
         <reference name="head">
-            <block type="metrilo_analytics/head" name="metrilo.analytics" template="metrilo/head.phtml" />
+            <block type="metrilo_analytics/head" name="metrilo.analytics" template="metrilo/head.phtml" after="-" />
         </reference>
     </default>
 

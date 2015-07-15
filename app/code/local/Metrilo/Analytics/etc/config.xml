@@ -21,6 +21,17 @@
                 </metrilo_analytics>
             </updates>
         </layout>
+        <events>
+            <customer_login>
+                <observers>
+                    <metrilo_login>
+                        <type>singleton</type>
+                        <class>Metrilo_Analytics_Model_Observer</class>
+                        <method>customerLogin</method>
+                    </metrilo_login>
+                </observers>
+            </customer_login>
+        </events>
     </frontend>
     <global>
     	<blocks>
