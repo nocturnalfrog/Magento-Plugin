@@ -31,6 +31,15 @@
                     </metrilo_login>
                 </observers>
             </customer_login>
+            <controller_action_layout_generate_blocks_after>
+                <observers>
+                    <pageview>
+                        <type>singleton</type>
+                        <class>Metrilo_Analytics_Model_Observer</class>
+                        <method>trackPageView</method>
+                    </pageview>
+                </observers>
+            </controller_action_layout_generate_blocks_after>
         </events>
     </frontend>
     <global>
