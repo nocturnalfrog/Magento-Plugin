@@ -19,8 +19,10 @@ class Metrilo_Analytics_Model_Observer
         $data = array(
             'id' => $customer->getId(),
             'params' => array(
-                'email' => $customer->getEmail(),
-                'name' => $customer->getName()
+                'email'         => $customer->getEmail(),
+                'name'          => $customer->getName(),
+                'first_name'    => $customer->getFirstname(),
+                'last_name'     => $customer->getLastname(),
             )
         );
         $helper->addEvent('identify', 'identify', $data);
@@ -74,7 +76,7 @@ class Metrilo_Analytics_Model_Observer
             // Additional information ( image and categories )
             if($product->getImage())
                 $data['image_url'] = (string)Mage::helper('catalog/image')->init($product, 'image');
-            
+
             if(count($product->getCategoryIds())) {
                 $categories = array();
                 $collection = $product->getCategoryCollection()->addAttributeToSelect('*');
