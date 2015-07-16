@@ -71,6 +71,21 @@ class Metrilo_Analytics_Model_Observer
                 'price' => number_format($product->getFinalPrice(), 2),
                 'url'   => $product->getProductUrl()
             );
+            // Additional information ( image and categories )
+            if($product->getImage())
+                $data['image_url'] = (string)Mage::helper('catalog/image')->init($product, 'image');
+            
+            if(count($product->getCategoryIds())) {
+                $categories = array();
+                $collection = $product->getCategoryCollection()->addAttributeToSelect('*');
+                foreach ($collection as $category) {
+                    $categories[] = array(
+                        'id' => $category->getId(),
+                        'name' => $category->getName()
+                    );
+                }
+                $data['categories'] = $categories;
+            }
             $helper->addEvent('track', 'view_product', $data);
             $pageTracked = true;
         }
@@ -92,5 +107,10 @@ class Metrilo_Analytics_Model_Observer
             $title = $observer->getEvent()->getLayout()->getBlock('head')->getTitle();
             $helper->addEvent('track', 'pageview', $title);
         }
+    }
+
+    public function addToCart(Varien_Event_Observer $observer)
+    {
+        $product = $action = $observer->getEvent()->getProduct();
     }
 }

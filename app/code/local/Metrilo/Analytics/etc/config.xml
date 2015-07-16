@@ -33,13 +33,22 @@
             </customer_login>
             <controller_action_layout_generate_blocks_after>
                 <observers>
-                    <pageview>
+                    <page_view>
                         <type>singleton</type>
                         <class>Metrilo_Analytics_Model_Observer</class>
                         <method>trackPageView</method>
-                    </pageview>
+                    </page_view>
                 </observers>
             </controller_action_layout_generate_blocks_after>
+            <checkout_cart_add_product_complete>
+                <observers>
+                    <add_to_cart>
+                        <type>singleton</type>
+                        <class>Metrilo_Analytics_Model_Observer</class>
+                        <method>addToCart</method>
+                    </add_to_cart>
+                </observers>
+            </checkout_cart_add_product_complete>
         </events>
     </frontend>
     <global>
