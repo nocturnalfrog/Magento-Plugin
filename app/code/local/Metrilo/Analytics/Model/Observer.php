@@ -130,6 +130,7 @@ class Metrilo_Analytics_Model_Observer
         $data =  array(
             'id'            => (int)$product->getId(),
             'price'         => (float)number_format($mainProduct->getFinalPrice(), 2),
+            'name'          => $mainProduct->getName(),
             'url'           => $mainProduct->getProductUrl(),
             'quantity'      => $item->getQty()
         );
