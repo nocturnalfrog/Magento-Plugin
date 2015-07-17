@@ -111,8 +111,36 @@ class Metrilo_Analytics_Model_Observer
         }
     }
 
+    /**
+     * Event for adding product to cart
+     * "checkout_cart_product_add_after"
+     *   
+     * @param Varien_Event_Observer $observer [description]
+     */
     public function addToCart(Varien_Event_Observer $observer)
     {
-        $product = $action = $observer->getEvent()->getProduct();
+        $helper = Mage::helper('metrilo_analytics');
+        /**
+         * @var Mage_Sales_Model_Quote_Item
+         */
+        $item = $observer->getQuoteItem();
+        $product = $item->getProduct();
+        $mainProduct = $observer->getProduct();
+        
+        $data =  array(
+            'id'            => (int)$product->getId(),
+            'price'         => (float)number_format($mainProduct->getFinalPrice(), 2),
+            'url'           => $mainProduct->getProductUrl(),
+            'quantity'      => $item->getQty()
+        );
+        // Add options for configurable products
+        if ($mainProduct->getId() != $product->getId()) {
+            $name = trim(str_replace("-", " ", $item->getName()));
+            $data['option_id'] = $item->getSku();
+            $data['option_name'] = $name;
+            $data['option_price'] = (float)number_format($mainProduct->getFinalPrice(), 2);
+        }
+        
+        $helper->addEvent('track', 'add_to_cart', $data);
     }
 }

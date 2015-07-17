@@ -40,7 +40,7 @@
                     </page_view>
                 </observers>
             </controller_action_layout_generate_blocks_after>
-            <checkout_cart_add_product_complete>
+            <checkout_cart_product_add_after>
                 <observers>
                     <add_to_cart>
                         <type>singleton</type>
@@ -48,7 +48,7 @@
                         <method>addToCart</method>
                     </add_to_cart>
                 </observers>
-            </checkout_cart_add_product_complete>
+            </checkout_cart_product_add_after>
         </events>
     </frontend>
     <global>
