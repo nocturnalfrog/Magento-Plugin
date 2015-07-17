@@ -49,6 +49,15 @@
                     </add_to_cart>
                 </observers>
             </checkout_cart_product_add_after>
+            <sales_quote_remove_item>
+                <observers>
+                    <remove_from_cart>
+                        <type>singleton</type>
+                        <class>Metrilo_Analytics_Model_Observer</class>
+                        <method>removeFromCart</method>
+                    </remove_from_cart>
+                </observers>
+            </sales_quote_remove_item>
         </events>
     </frontend>
     <global>

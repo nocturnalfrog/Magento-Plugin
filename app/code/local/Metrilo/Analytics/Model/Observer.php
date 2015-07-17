@@ -128,7 +128,7 @@ class Metrilo_Analytics_Model_Observer
         $mainProduct = $observer->getProduct();
         
         $data =  array(
-            'id'            => (int)$product->getId(),
+            'id'            => (int)$mainProduct->getId(),
             'price'         => (float)number_format($mainProduct->getFinalPrice(), 2),
             'name'          => $mainProduct->getName(),
             'url'           => $mainProduct->getProductUrl(),
@@ -144,4 +144,24 @@ class Metrilo_Analytics_Model_Observer
         
         $helper->addEvent('track', 'add_to_cart', $data);
     }
+
+    /**
+     * Event for removing item from shopping bag
+     * 
+     * @param  Varien_Event_Observer $observer
+     * @return void
+     */
+    public function removeFromCart(Varien_Event_Observer $observer)
+    {
+        $helper = Mage::helper('metrilo_analytics');
+        $item = $observer->getQuoteItem();
+        $product = $item->getProduct();
+
+        $data = array(
+            'id' => $product->getId()
+        );
+
+        $helper->addEvent('track', 'remove_from_cart', $data);
+    }
+
 }
