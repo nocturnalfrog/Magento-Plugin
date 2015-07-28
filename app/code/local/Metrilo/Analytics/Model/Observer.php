@@ -164,4 +164,33 @@ class Metrilo_Analytics_Model_Observer
         $helper->addEvent('track', 'remove_from_cart', $data);
     }
 
+    /**
+     * Track placing a new order from customer
+     * 
+     * @param  Varien_Event_Observer $observer
+     * @return void
+     */
+    public function trackNewOrder(Varien_Event_Observer $observer)
+    {
+        $helper = Mage::helper('metrilo_analytics');
+        $data = array();
+        $order = $observer->getOrder();
+        if ($order->getId())
+        {
+            $data['order_id'] = $order->getId();
+            $data['order_type'] = "purchase";
+            $data['order_status'] = "pending";
+            $data['amount'] = (float)$order->getGrandTotal();
+            $data['shipping_amount'] = (float)$order->getShippingAmount();
+            // $data['tax_amount'] = "";
+            $data['shipping_method'] = $order->getShippingDescription();
+            $data['payment_method'] = $order->getPayment()->getMethodInstance()->getTitle();
+            foreach ($order->getAllVisibleItems() as $item) {
+                $data['items'][] = array(
+
+                );
+            }
+            $helper->addEvent('track', 'order', $data);
+        }
+    }
 }

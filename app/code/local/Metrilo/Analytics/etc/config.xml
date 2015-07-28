@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- API Token:  323dce8d65d9ca75 -->
-<!-- API Secret: fda173fcb7f26081aa78dace -->
 <!-- 
 /**
  * @package    Metrilo_Analytics
@@ -58,6 +56,15 @@
                     </remove_from_cart>
                 </observers>
             </sales_quote_remove_item>
+            <sales_order_place_after>
+                <observers>
+                    <place_order>
+                        <type>singleton</type>
+                        <class>Metrilo_Analytics_Model_Observer</class>
+                        <method>trackNewOrder</method>
+                    </place_order>
+                </observers>
+            </sales_order_place_after>
         </events>
     </frontend>
     <global>
