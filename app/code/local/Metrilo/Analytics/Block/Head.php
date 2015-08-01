@@ -22,6 +22,6 @@ class Metrilo_Analytics_Block_Head extends Mage_Core_Block_Template
         $events = (array)Mage::getSingleton('core/session')->getData(self::DATA_TAG);
         // clear events from session ater get events once
         Mage::getSingleton('core/session')->setData(self::DATA_TAG,'');
-        return $events;
+        return array_filter($events);
     }
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Catch events and track them to metrilo api
  * 
@@ -36,7 +36,7 @@ class Metrilo_Analytics_Model_Observer
      *   - cart view
      *   - checkout
      *   - any other pages (get title from head)
-     *   
+     *
      * @param  Varien_Event_Observer $observer
      * @return void
      */
@@ -46,15 +46,13 @@ class Metrilo_Analytics_Model_Observer
         $action = $observer->getEvent()->getAction()->getFullActionName();
         $pageTracked = false;
         // homepage & CMS pages
-        if ($action == 'cms_index_index' || $action == 'cms_page_view')
-        {
+        if ($action == 'cms_index_index' || $action == 'cms_page_view') {
             $title = Mage::getSingleton('cms/page')->getTitle();
             $helper->addEvent('track', 'pageview', $title);
             $pageTracked = true;
         }
         // category view pages
-        if($action == 'catalog_category_view')
-        {
+        if($action == 'catalog_category_view') {
             $category = Mage::registry('current_category');
             $data =  array(
                 'id'    =>  $category->getId(), 
@@ -64,11 +62,10 @@ class Metrilo_Analytics_Model_Observer
             $pageTracked = true;
         }
         // product view pages
-        if ($action == 'catalog_product_view')
-        {
+        if ($action == 'catalog_product_view') {
             $product = Mage::registry('current_product');
             $data =  array(
-                'id'    => $product->getId(), 
+                'id'    => $product->getId(),
                 'name'  => $product->getName(),
                 'price' => number_format($product->getFinalPrice(), 2),
                 'url'   => $product->getProductUrl()
@@ -92,20 +89,17 @@ class Metrilo_Analytics_Model_Observer
             $pageTracked = true;
         }
         // cart view
-        if($action == 'checkout_cart_index')
-        {
+        if($action == 'checkout_cart_index') {
             $helper->addEvent('track', 'view_cart', array());
             $pageTracked = true;
         }
         // checkout
-        if ($action != 'checkout_cart_index' && strpos($action, 'checkout') !== false)
-        {
+        if ($action != 'checkout_cart_index' && strpos($action, 'checkout') !== false) {
             $helper->addEvent('track', 'checkout_start', array());
             $pageTracked = true;
         }
         // Any other pages
-        if(!$pageTracked)
-        {
+        if(!$pageTracked) {
             $title = $observer->getEvent()->getLayout()->getBlock('head')->getTitle();
             $helper->addEvent('track', 'pageview', $title);
         }
@@ -114,7 +108,7 @@ class Metrilo_Analytics_Model_Observer
     /**
      * Event for adding product to cart
      * "checkout_cart_product_add_after"
-     *   
+     *
      * @param Varien_Event_Observer $observer [description]
      */
     public function addToCart(Varien_Event_Observer $observer)
@@ -126,7 +120,7 @@ class Metrilo_Analytics_Model_Observer
         $item = $observer->getQuoteItem();
         $product = $item->getProduct();
         $mainProduct = $observer->getProduct();
-        
+
         $data =  array(
             'id'            => (int)$mainProduct->getId(),
             'price'         => (float)number_format($mainProduct->getFinalPrice(), 2),
@@ -141,13 +135,13 @@ class Metrilo_Analytics_Model_Observer
             $data['option_name'] = $name;
             $data['option_price'] = (float)number_format($mainProduct->getFinalPrice(), 2);
         }
-        
+
         $helper->addEvent('track', 'add_to_cart', $data);
     }
 
     /**
      * Event for removing item from shopping bag
-     * 
+     *
      * @param  Varien_Event_Observer $observer
      * @return void
      */
@@ -166,7 +160,7 @@ class Metrilo_Analytics_Model_Observer
 
     /**
      * Track placing a new order from customer
-     * 
+     *
      * @param  Varien_Event_Observer $observer
      * @return void
      */
@@ -175,22 +169,56 @@ class Metrilo_Analytics_Model_Observer
         $helper = Mage::helper('metrilo_analytics');
         $data = array();
         $order = $observer->getOrder();
-        if ($order->getId())
-        {
-            $data['order_id'] = $order->getId();
+        if ($order->getId()) {
+            $data['order_id'] = $order->getIncrementId();
             $data['order_type'] = "purchase";
             $data['order_status'] = "pending";
             $data['amount'] = (float)$order->getGrandTotal();
             $data['shipping_amount'] = (float)$order->getShippingAmount();
-            // $data['tax_amount'] = "";
+            $data['tax_amount'] = $order->getTaxAmount();
             $data['shipping_method'] = $order->getShippingDescription();
             $data['payment_method'] = $order->getPayment()->getMethodInstance()->getTitle();
-            foreach ($order->getAllVisibleItems() as $item) {
-                $data['items'][] = array(
+            if ($order->getCouponCode()) {
+                $data['coupons'] = $order->getCouponCode();
+            }
+            $skusAdded = array();
+            foreach ($order->getAllItems() as $item) {
+                if (in_array($item->getSku(), $skusAdded)) continue;
 
+                $skusAdded[] = $item->getSku();
+                $dataItem = array(
+                    'id'        => $item->getProductId(),
+                    'price'     => (float)number_format($item->getPrice(), 2),
+                    'name'      => $item->getName(),
+                    'url'       => $item->getProduct()->getProductUrl(),
+                    'quantity'  => $item->getQtyOrdered()
                 );
+                if ($item->getProductType() == 'configurable') {
+                    $mainProduct = Mage::getModel('catalog/product')->load($item->getProductId());
+                    $options = $item->getProductOptions();
+                    $dataItem['price'] = number_format($mainProduct->getFinalPrice(), 2);
+                    $dataItem['option_id'] = $item->getSku();
+                    $dataItem['option_name'] = $item->getName();
+                    $dataItem['option_price'] = (float)number_format($item->getPrice(), 2);
+                }
+                $data['items'][] = $dataItem;
             }
             $helper->addEvent('track', 'order', $data);
+        }
+    }
+
+    /**
+     * Track adding discount codes in shopping bag
+     *
+     * @param  Varien_Event_Observer $observer
+     * @return void
+     */
+    public function trackCoupon(Varien_Event_Observer $observer)
+    {
+        $helper = Mage::helper('metrilo_analytics');
+        $code = Mage::getSingleton('checkout/cart')->getQuote()->getCouponCode();
+        if (strlen($code)) {
+            $helper->addEvent('track', 'applied_coupon', $code);
         }
     }
 }

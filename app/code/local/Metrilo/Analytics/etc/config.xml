@@ -65,6 +65,15 @@
                     </place_order>
                 </observers>
             </sales_order_place_after>
+            <controller_action_postdispatch_checkout_cart_couponPost>
+                <observers>
+                    <applied_coupon>
+                        <type>singleton</type>
+                        <class>Metrilo_Analytics_Model_Observer</class>
+                        <method>trackCoupon</method>
+                    </applied_coupon>
+                </observers>
+            </controller_action_postdispatch_checkout_cart_couponPost>
         </events>
     </frontend>
     <global>

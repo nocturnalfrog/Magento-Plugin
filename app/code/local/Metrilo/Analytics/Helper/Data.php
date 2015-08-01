@@ -1,7 +1,7 @@
-<?php 
+<?php
 /**
  * Helper class for metrilo properties
- * 
+ *
  * @author Miroslav Petrov <miro91tn@gmail.com>
  */
 class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
@@ -9,7 +9,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
 
     /**
      * Get session instance
-     * 
+     *
      * @return Mage_Core_Model_Session
      */
     public function getSession()
@@ -19,7 +19,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
 
     /**
      * Get API Token from system configuration
-     * 
+     *
      * @return string
      */
     public function getApiToken()
@@ -29,7 +29,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
 
     /**
      * Get API Secret from system configuration
-     * 
+     *
      * @return string
      */
     public function getApiSecret()
@@ -39,7 +39,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
 
     /**
      * Add event to queue
-     * 
+     *
      * @param string $method Can be identiy|track
      * @param string $type
      * @param string|array $data
