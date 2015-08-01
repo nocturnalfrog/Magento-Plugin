@@ -10,7 +10,7 @@
                             <config>
                                 <children>
                                     <metrilo_analytics_settings>
-                                        <title>Metrilo Settings Tab</title> 
+                                        <title>Metrilo Settings Tab</title>
                                     </metrilo_analytics_settings>
                                 </children>
                             </config>

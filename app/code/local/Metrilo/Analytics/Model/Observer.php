@@ -1,14 +1,14 @@
 <?php
 /**
  * Catch events and track them to metrilo api
- * 
+ *
  * @author Miroslav Petrov <miro91tn@gmail.com>
  */
 class Metrilo_Analytics_Model_Observer
 {
     /**
      * Identify customer after login
-     * 
+     *
      * @param  Varien_Event_Observer $observer
      * @return void
      */

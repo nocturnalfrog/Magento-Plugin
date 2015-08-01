@@ -1,7 +1,7 @@
-<?php 
+<?php
 /**
  * Block for head part who render all js lines
- * 
+ *
  * @author Miroslav Petrov <miro91tn@gmail.com>
  */
 class Metrilo_Analytics_Block_Head extends Mage_Core_Block_Template
@@ -13,7 +13,7 @@ class Metrilo_Analytics_Block_Head extends Mage_Core_Block_Template
 
     /**
      * Get events to track them to metrilo js api
-     * 
+     *
      * @return array
      */
     public function getEvents()
