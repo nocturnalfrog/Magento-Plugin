@@ -136,11 +136,11 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             if($identityData) {
                 $call['identity'] = $identityData;
             }
-
+            Mage::log($params, null, 'Metrilo_Analytics.log');
             // sort for salting and prepare base64
             ksort($call);
             $based_call = base64_encode(Mage::helper('core')->jsonEncode($call));
-            $signature = md5($based_call.$helper->getApiSecret());
+            $signature = md5($based_call.$this->getApiSecret());
             // Use Varien_Http_Client
             // to generate API call end point and call it
             $url = 'http://p.metrilo.com/t?s='.$signature.'&hs='.$based_call;
