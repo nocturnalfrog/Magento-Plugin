@@ -77,6 +77,17 @@
         </events>
     </frontend>
     <global>
+        <events>
+            <sales_order_save_after>
+                <observers>
+                    <update_order>
+                        <type>singleton</type>
+                        <class>Metrilo_Analytics_Model_Observer</class>
+                        <method>updateOrder</method>
+                    </update_order>
+                </observers>
+            </sales_order_save_after>
+        </events>
     	<blocks>
             <metrilo_analytics>
                 <class>Metrilo_Analytics_Block</class>
