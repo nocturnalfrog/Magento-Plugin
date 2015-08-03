@@ -136,7 +136,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             if($identityData) {
                 $call['identity'] = $identityData;
             }
-            Mage::log($params, null, 'Metrilo_Analytics.log');
+
             // sort for salting and prepare base64
             ksort($call);
             $based_call = base64_encode(Mage::helper('core')->jsonEncode($call));
