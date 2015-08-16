@@ -211,6 +211,9 @@ class Metrilo_Analytics_Model_Observer
         }
 
         $time = false;
+        if ($order->getCreatedAtStoreDate()) {
+            $time = $order->getCreatedAtStoreDate()->getTimestamp() * 1000;
+        }
 
         $identityData = array(
             'email'         => $order->getCustomerEmail(),

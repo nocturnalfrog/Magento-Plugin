@@ -147,6 +147,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             $client = new Varien_Http_Client($url);
             $response = $client->request();
             $result = Mage::helper('core')->jsonDecode($response->getBody());
+            Mage::log($result, null, 'Metrilo_Analytics.log');
             if (!$result['status']) {
                 Mage::log($result['error'], null, 'Metrilo_Analytics.log');
             }
