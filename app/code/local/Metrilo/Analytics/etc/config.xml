@@ -115,4 +115,11 @@
             </metrilo_analytics>
         </routers>
     </admin>
+    <default>
+        <metrilo_analytics_settings>
+            <settings>
+                <enable>0</enable>
+            </settings>
+        </metrilo_analytics_settings>
+    </default>
 </config>

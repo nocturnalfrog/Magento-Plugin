@@ -21,6 +21,19 @@ class Metrilo_Analytics_Block_Adminhtml_System_Config_Form_Button extends Mage_A
     }
 
     /**
+     * Render metrilo js if module is enabled
+     *
+     * @return string
+     */
+    protected function _toHtml()
+    {
+        $html = parent::_toHtml();
+        $helper = Mage::helper('metrilo_analytics');
+        if($helper->isEnabled() && $helper->getApiToken() && $helper->getApiSecret())
+            return $html;
+    }
+
+    /**
     * Return element html
     *
     * @param  Varien_Data_Form_Element_Abstract $element

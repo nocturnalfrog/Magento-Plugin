@@ -24,4 +24,16 @@ class Metrilo_Analytics_Block_Head extends Mage_Core_Block_Template
         Mage::getSingleton('core/session')->setData(self::DATA_TAG,'');
         return array_filter($events);
     }
+
+    /**
+     * Render metrilo js if module is enabled
+     *
+     * @return string
+     */
+    protected function _toHtml()
+    {
+        $html = parent::_toHtml();
+        if(Mage::helper('metrilo_analytics')->isEnabled())
+            return $html;
+    }
 }

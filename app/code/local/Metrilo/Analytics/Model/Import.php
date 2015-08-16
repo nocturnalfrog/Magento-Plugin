@@ -8,8 +8,8 @@ class Metrilo_Analytics_Model_Import extends Mage_Core_Model_Abstract
 {
     private $_orders = array();
     private $_ordersTotal = 0;
-    public  $chunks = array();
-    public  $total_chunks = 0;
+    private $_chunks = array();
+    private $_totalChunks = 0;
 
     /**
      * Prepare all order ids
@@ -25,7 +25,7 @@ class Metrilo_Analytics_Model_Import extends Mage_Core_Model_Abstract
         }
 
         $this->_ordersTotal = count($this->_orders);
-        $this->prepareOrderChunks();
+        $this->_prepareOrderChunks();
     }
 
     /**
@@ -33,7 +33,7 @@ class Metrilo_Analytics_Model_Import extends Mage_Core_Model_Abstract
      *
      * @return void
      */
-    public function prepareOrderChunks()
+    private function _prepareOrderChunks()
     {
         $chunks = array();
         $current_chunk = 0;
@@ -46,7 +46,17 @@ class Metrilo_Analytics_Model_Import extends Mage_Core_Model_Abstract
                 $current_chunk++;
             }
         }
-        $this->chunks = $chunks;
-        $this->total_chunks = count($chunks);
+        $this->_chunks = $chunks;
+        $this->_totalChunks = count($chunks);
+    }
+
+    /**
+     * Chenks array
+     *
+     * @return array
+     */
+    public function getChunks()
+    {
+        return $this->_chunks;
     }
 }
