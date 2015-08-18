@@ -9,3 +9,27 @@ ul.tabs a.metrilo-section:hover span {
     background-size: 23px;
     padding: 5px 0 5px 50px;
 }
+#metrilo-info {
+    float:left;
+    width: calc(100% - 20px);
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-bottom: 7px;
+}
+#metrilo-info img {
+    float:left;
+    width:50px;
+}
+#metrilo-info a {
+    color:#378FE2!important;
+    margin: 0;
+}
+#metrilo-info .text {
+    float:left;
+    margin-left: 10px;
+    padding-top: 5px;
+}
+#metrilo_import_status {
+    font-weight: bold;
+}
