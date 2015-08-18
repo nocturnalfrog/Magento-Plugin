@@ -8,7 +8,9 @@
     </tabs>
     <sections>
         <metrilo_analytics_settings module="metrilo_analytics">
-            <label>General</label>
+            <label>General Settings</label>
+            <class>metrilo-section</class>
+            <header_css>metrilo-header</header_css>
             <sort_order>10</sort_order>
             <show_in_default>1</show_in_default>
             <show_in_website>1</show_in_website>

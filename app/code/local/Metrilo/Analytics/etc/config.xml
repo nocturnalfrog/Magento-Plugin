@@ -115,6 +115,15 @@
             </metrilo_analytics>
         </routers>
     </admin>
+    <adminhtml>
+        <layout>
+            <updates>
+                <metrilo_analytics>
+                    <file>metrilo_analytics.xml</file>
+                </metrilo_analytics>
+            </updates>
+        </layout>
+    </adminhtml>
     <default>
         <metrilo_analytics_settings>
             <settings>
