@@ -15,9 +15,17 @@ class Metrilo_Analytics_Block_Adminhtml_System_Config_Form_Button extends Mage_A
     protected function _construct()
     {
         parent::_construct();
-        $import = Mage::getModel('metrilo_analytics/import');
-        $this->setImport($import);
         $this->setTemplate('metrilo/system/config/button.phtml');
+    }
+
+    /**
+     * Get import instance
+     *
+     * @return Metrilo_Analytics_Model_Import
+     */
+    public function getImport()
+    {
+        return Mage::getSingleton('metrilo_analytics/import');
     }
 
     /**

@@ -17,9 +17,10 @@ class Metrilo_Analytics_Adminhtml_AjaxController extends Mage_Adminhtml_Controll
         $result['success'] = false;
         $helper = Mage::helper('metrilo_analytics');
         try {
-            $orderIds = $this->getRequest()->getParam('orders');
-            foreach ($orderIds as $incrementId) {
-                $order = Mage::getModel('sales/order')->loadByIncrementId($incrementId);
+            $import = Mage::getSingleton('metrilo_analytics/import');
+            $chunkId = (int)$this->getRequest()->getParam('chunk_id');
+            $orders = $import->getOrders($chunkId);
+            foreach ($orders as $order) {
                 if ($order->getId()) {
                     $orderDetails = $helper->prepareOrderDetails($order);
 

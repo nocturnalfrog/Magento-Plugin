@@ -67,7 +67,7 @@ class Metrilo_Analytics_Model_Observer
             $data =  array(
                 'id'    => $product->getId(),
                 'name'  => $product->getName(),
-                'price' => number_format($product->getFinalPrice(), 2),
+                'price' => $product->getFinalPrice(),
                 'url'   => $product->getProductUrl()
             );
             // Additional information ( image and categories )
@@ -123,7 +123,7 @@ class Metrilo_Analytics_Model_Observer
 
         $data =  array(
             'id'            => (int)$mainProduct->getId(),
-            'price'         => (float)number_format($mainProduct->getFinalPrice(), 2),
+            'price'         => (float)$mainProduct->getFinalPrice(),
             'name'          => $mainProduct->getName(),
             'url'           => $mainProduct->getProductUrl(),
             'quantity'      => $item->getQty()
@@ -133,7 +133,7 @@ class Metrilo_Analytics_Model_Observer
             $name = trim(str_replace("-", " ", $item->getName()));
             $data['option_id'] = $item->getSku();
             $data['option_name'] = $name;
-            $data['option_price'] = (float)number_format($mainProduct->getFinalPrice(), 2);
+            $data['option_price'] = (float)$mainProduct->getFinalPrice();
         }
 
         $helper->addEvent('track', 'add_to_cart', $data);

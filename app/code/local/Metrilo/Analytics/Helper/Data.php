@@ -94,18 +94,18 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             $skusAdded[] = $item->getSku();
             $dataItem = array(
                 'id'        => $item->getProductId(),
-                'price'     => (float)number_format($item->getPrice(), 2),
+                'price'     => (float)$item->getPrice(),
                 'name'      => $item->getName(),
                 'url'       => $item->getProduct()->getProductUrl(),
-                'quantity'  => $item->getQtyOrdered()
+                'quantity'  => (int)$item->getQtyOrdered()
             );
             if ($item->getProductType() == 'configurable') {
                 $mainProduct = Mage::getModel('catalog/product')->load($item->getProductId());
                 $options = $item->getProductOptions();
-                $dataItem['price'] = number_format($mainProduct->getFinalPrice(), 2);
+                $dataItem['price'] = $mainProduct->getFinalPrice();
                 $dataItem['option_id'] = $item->getSku();
                 $dataItem['option_name'] = $item->getName();
-                $dataItem['option_price'] = (float)number_format($item->getPrice(), 2);
+                $dataItem['option_price'] = (float)$item->getPrice();
             }
             $data['items'][] = $dataItem;
         }

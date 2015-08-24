@@ -6,10 +6,9 @@
  */
 class Metrilo_Analytics_Model_Import extends Mage_Core_Model_Abstract
 {
-    private $_orders = array();
     private $_ordersTotal = 0;
-    private $_chunks = array();
     private $_totalChunks = 0;
+    private $_chunkItems = 15;
 
     /**
      * Prepare all order ids
@@ -20,34 +19,22 @@ class Metrilo_Analytics_Model_Import extends Mage_Core_Model_Abstract
     {
         // prepare to fetch all orders
         $orders = Mage::getModel('sales/order')->getCollection();
-        foreach($orders as $order){
-            array_push($this->_orders, $order->getIncrementId());
-        }
-
-        $this->_ordersTotal = count($this->_orders);
-        $this->_prepareOrderChunks();
+        $this->_ordersTotal = $orders->count();
+        $this->_totalChunks = (int)ceil($this->_ordersTotal / $this->_chunkItems);
     }
 
     /**
-     * Prepare order chunks
+     * Get chunk orders
      *
-     * @return void
+     * @param  int
+     * @return Varien_Data_Collection
      */
-    private function _prepareOrderChunks()
+    public function getOrders($chunkId)
     {
-        $chunks = array();
-        $current_chunk = 0;
-        foreach($this->_orders as $order_id){
-            if(!isset($chunks[$current_chunk])){
-                $chunks[$current_chunk] = array();
-            }
-            $chunks[$current_chunk][] = $order_id;
-            if(count($chunks[$current_chunk]) >= 15){
-                $current_chunk++;
-            }
-        }
-        $this->_chunks = $chunks;
-        $this->_totalChunks = count($chunks);
+        $orders = Mage::getModel('sales/order')
+                    ->getCollection()
+                    ->setPageSize($this->_chunkItems);
+        return $orders->setCurPage($chunkId + 1);
     }
 
     /**
@@ -57,6 +44,6 @@ class Metrilo_Analytics_Model_Import extends Mage_Core_Model_Abstract
      */
     public function getChunks()
     {
-        return $this->_chunks;
+        return $this->_totalChunks;
     }
 }

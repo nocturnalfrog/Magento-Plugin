@@ -1,10 +1,10 @@
+<?php $import = $this->getImport(); ?>
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script type="text/javascript">
     jQuery.noConflict();
 
     function import_metrilo() {
-        var metrilo_chunks = <?php echo Mage::helper('core')->jsonEncode($this->getImport()->getChunks()); ?>;
-        var total_chunks = <?php echo count($this->getImport()->getChunks()); ?>;
+        var total_chunks = <?php echo $import->getChunks(); ?>;
         var chunk_percentage = 100;
         if(total_chunks > 0){
             var chunk_percentage = (100 / total_chunks);
@@ -13,15 +13,14 @@
             progress_percents = Math.round(chunk_id * chunk_percentage);
             update_importing_message('Please wait... '+progress_percents+'% done');
 
-            var order_ids = metrilo_chunks[chunk_id];
             // add form_key for magento controller check
-            data = {'orders': order_ids, 'form_key': window.FORM_KEY};
+            data = {'chunk_id': chunk_id, 'form_key': window.FORM_KEY};
             jQuery.post('<?php echo $this->getAjaxUrl(); ?>', data, function(response) {
                 new_chunk_id = chunk_id + 1;
-                if(metrilo_chunks[new_chunk_id] != undefined){
+                if(new_chunk_id < total_chunks){
                     setTimeout(function(){
                         sync_chunk(new_chunk_id);
-                    }, 1000);
+                    }, 100);
                 }else{
                     update_importing_message("<span style='color: green;'>Done! Please expect up to 30 minutes for your historical data to appear in Metrilo.</span>");
                 }
