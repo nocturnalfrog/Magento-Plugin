@@ -7,3 +7,4 @@ app/design/adminhtml/default/default/layout/metrilo_analytics.xml app/design/adm
 skin/adminhtml/default/default/metrilo/styles.css skin/adminhtml/default/default/metrilo/styles.css
 skin/adminhtml/default/default/metrilo/logo.png skin/adminhtml/default/default/metrilo/logo.png
 skin/adminhtml/default/default/metrilo/favicon-metrilo.png skin/adminhtml/default/default/metrilo/favicon-metrilo.png
+skin/adminhtml/default/default/metrilo/loader.gif skin/adminhtml/default/default/metrilo/loader.gif

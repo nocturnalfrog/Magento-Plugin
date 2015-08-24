@@ -32,4 +32,10 @@ ul.tabs a.metrilo-section:hover span {
 }
 #metrilo_import_status {
     font-weight: bold;
+    vertical-align: middle;
+    display: flex;
+    padding: 10px 0;
+}
+#metrilo_import_status img {
+    margin-right: 5px;
 }

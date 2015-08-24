@@ -9,9 +9,12 @@
         if(total_chunks > 0){
             var chunk_percentage = (100 / total_chunks);
         }
+        // Update button state and text
+        jQuery('#metrilo_button').addClass('disabled').attr('disabled', 'disabled').text('Importing orders');
+
         var sync_chunk = function(chunk_id){
             progress_percents = Math.round(chunk_id * chunk_percentage);
-            update_importing_message('Please wait... '+progress_percents+'% done');
+            update_importing_message('Please wait... '+progress_percents+'% done', true);
 
             // add form_key for magento controller check
             data = {'chunk_id': chunk_id, 'form_key': window.FORM_KEY};
@@ -22,14 +25,17 @@
                         sync_chunk(new_chunk_id);
                     }, 100);
                 }else{
-                    update_importing_message("<span style='color: green;'>Done! Please expect up to 30 minutes for your historical data to appear in Metrilo.</span>");
+                    update_importing_message("<span style='color: green;'>Done! Please expect up to 30 minutes for your historical data to appear in Metrilo.</span>", false);
+                    jQuery('#metrilo_button').removeClass('disabled').addClass('success').text('Orders imported');
                 }
 
             });
 
         }
 
-        var update_importing_message = function(message){
+        var update_importing_message = function(message, show_loader){
+            if (show_loader)
+                message = '<img src="<?php echo $this->getSkinUrl("metrilo/loader.gif"); ?>" />' + message;
             jQuery('#metrilo_import_status').html(message);
         }
         sync_chunk(0);
