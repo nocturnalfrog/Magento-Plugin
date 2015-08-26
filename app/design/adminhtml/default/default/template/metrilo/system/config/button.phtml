@@ -12,33 +12,42 @@
         // Update button state and text
         jQuery('#metrilo_button').addClass('disabled').attr('disabled', 'disabled').text('Importing orders');
 
-        var sync_chunk = function(chunk_id){
-            progress_percents = Math.round(chunk_id * chunk_percentage);
-            update_importing_message('Please wait... '+progress_percents+'% done', true);
+        var errorOccured = false;
 
-            // add form_key for magento controller check
-            data = {'chunk_id': chunk_id, 'form_key': window.FORM_KEY};
-            jQuery.post('<?php echo $this->getAjaxUrl(); ?>', data, function(response) {
-                new_chunk_id = chunk_id + 1;
-                if(new_chunk_id < total_chunks){
-                    setTimeout(function(){
-                        sync_chunk(new_chunk_id);
-                    }, 100);
-                }else{
-                    update_importing_message("<span style='color: green;'>Done! Please expect up to 30 minutes for your historical data to appear in Metrilo.</span>", false);
-                    jQuery('#metrilo_button').removeClass('disabled').addClass('success').text('Orders imported');
-                }
+        for (var chunk_id = 0; chunk_id < total_chunks; chunk_id ++) {
+          progress_percents = Math.round(chunk_id * chunk_percentage);
+          update_importing_message('Please wait... '+progress_percents+'% done', true);
 
-            });
+          var data = {'chunk_id': chunk_id, 'form_key': window.FORM_KEY};
 
+          jQuery.ajax({
+            type: 'POST',
+            url: '<?php echo $this->getAjaxUrl(); ?>',
+            error: function(response) {
+              errorOccured = true;
+            },
+            data: data,
+            async: false
+          });
+
+          if (errorOccured === true) {
+            break;
+          }
         }
 
-        var update_importing_message = function(message, show_loader){
+        if (errorOccured === false) {
+          update_importing_message("<span style='color: green;'>Done! Please expect up to 30 minutes for your historical data to appear in Metrilo.</span>", false);
+          jQuery('#metrilo_button').removeClass('disabled').addClass('success').text('Orders imported');
+        } else {
+          update_importing_message("<span style='color: red;'>There was error while importing your data in Metrilo.</span>", false);
+          jQuery('#metrilo_button').removeClass('disabled').removeAttr('disabled').text('Retry import');
+        }
+
+        var update_importing_message = function (message, show_loader) {
             if (show_loader)
                 message = '<img src="<?php echo $this->getSkinUrl("metrilo/loader.gif"); ?>" />' + message;
             jQuery('#metrilo_import_status').html(message);
         }
-        sync_chunk(0);
     }
 </script>
 
