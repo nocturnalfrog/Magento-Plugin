@@ -18,8 +18,7 @@ class Metrilo_Analytics_Model_Import extends Mage_Core_Model_Abstract
     public function _construct()
     {
         // prepare to fetch all orders
-        $orders = Mage::getModel('sales/order')->getCollection();
-        $this->_ordersTotal = $orders->count();
+        $this->_ordersTotal = Mage::getModel('sales/order')->getCollection()->getSize();
         $this->_totalChunks = (int)ceil($this->_ordersTotal / $this->_chunkItems);
     }
 
@@ -31,10 +30,10 @@ class Metrilo_Analytics_Model_Import extends Mage_Core_Model_Abstract
      */
     public function getOrders($chunkId)
     {
-        $orders = Mage::getModel('sales/order')
+        return Mage::getModel('sales/order')
                     ->getCollection()
-                    ->setPageSize($this->_chunkItems);
-        return $orders->setCurPage($chunkId + 1);
+                    ->setPageSize($this->_chunkItems)
+                    ->setCurPage($chunkId + 1);
     }
 
     /**
