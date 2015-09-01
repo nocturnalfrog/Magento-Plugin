@@ -113,27 +113,56 @@ class Metrilo_Analytics_Model_Observer
      */
     public function addToCart(Varien_Event_Observer $observer)
     {
-        $helper = Mage::helper('metrilo_analytics');
         /**
          * @var Mage_Sales_Model_Quote_Item
          */
         $item = $observer->getQuoteItem();
         $product = $item->getProduct();
-        $mainProduct = $observer->getProduct();
+        $cartProduct = $observer->getProduct();
+
+        if ($cartProduct->isGrouped()) {
+            $options = Mage::app()->getRequest()->getParam('super_group');
+            if (is_array($options)) {
+                foreach ($options as $productId => $qty) {
+                    $this->_addToCart((int)$productId, $cartProduct, (int)$qty);
+                }
+            }
+        } elseif($cartProduct->isConfigurable()) {
+            $this->_addToCart($product->getId(), $cartProduct, $item->getQty());
+        } else {
+            $this->_addToCart($cartProduct->getId(), $cartProduct, $item->getQty());
+        }
+
+    }
+
+    /**
+     * Add to cart event
+     *
+     * @param integer $productId
+     * @param Mage_Catalog_Model_Product  $item
+     * @param integer $qty
+     */
+    private function _addToCart($productId, $item, $qty) {
+        $helper = Mage::helper('metrilo_analytics');
+        $product = Mage::getModel('catalog/product')->load($productId);
 
         $data =  array(
-            'id'            => (int)$mainProduct->getId(),
-            'price'         => (float)$mainProduct->getFinalPrice(),
-            'name'          => $mainProduct->getName(),
-            'url'           => $mainProduct->getProductUrl(),
-            'quantity'      => $item->getQty()
+            'id'            => (int)$product->getId(),
+            'price'         => (float)$product->getFinalPrice(),
+            'name'          => $product->getName(),
+            'url'           => $product->getProductUrl(),
+            'quantity'      => $qty
         );
-        // Add options for configurable products
-        if ($mainProduct->getId() != $product->getId()) {
-            $name = trim(str_replace("-", " ", $item->getName()));
-            $data['option_id'] = $item->getSku();
-            $data['option_name'] = $name;
-            $data['option_price'] = (float)$mainProduct->getFinalPrice();
+
+        // Add options for grouped or configurable products
+        if ($item->isGrouped() || $item->isConfigurable()) {
+            $data['id']     = $item->getId();
+            $data['name']   = $item->getName();
+            $data['url']    = $item->getProductUrl();
+            // Options
+            $data['option_id'] = $product->getSku();
+            $data['option_name'] = trim(str_replace("-", " ", $product->getName()));
+            $data['option_price'] = (float)$product->getFinalPrice();
         }
 
         $helper->addEvent('track', 'add_to_cart', $data);
