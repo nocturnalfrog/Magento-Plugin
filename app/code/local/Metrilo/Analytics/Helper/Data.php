@@ -170,7 +170,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             $based_call = base64_encode(Mage::helper('core')->jsonEncode($call));
             $signature = md5($based_call.$this->getApiSecret());
 
-            $url = 'http://a.staging.metrilo.com/bt';
+            $url = 'http://p.metrilo.com/bt';
             $client = new Varien_Http_Client($url);
 
             $request_body = array(
