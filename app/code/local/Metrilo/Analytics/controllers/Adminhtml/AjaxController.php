@@ -48,7 +48,7 @@ class Metrilo_Analytics_Adminhtml_AjaxController extends Mage_Adminhtml_Controll
 
                     $builtEventArray = $helper->buildEventArray(
                       $identityData['email'], 'order', $orderDetails, $identityData, $time, $callParameters
-                    )
+                    );
 
                     array_push($ordersForSubmition, $builtEventArray);
                 }
