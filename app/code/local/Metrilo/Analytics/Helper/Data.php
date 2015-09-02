@@ -182,7 +182,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             $response = $client->request('POST');
 
             if ($response->isError()) {
-                Mage::log($response->getBody()['error'], null, 'Metrilo_Analytics.log');
+                Mage::log($response->getBody(), null, 'Metrilo_Analytics.log');
             }
         } catch (Exception $e) {
             Mage::log($e->getMessage(), null, 'Metrilo_Analytics.log');
