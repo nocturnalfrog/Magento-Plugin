@@ -139,11 +139,11 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
 
             // Additional ksort here because of adding token param
             ksort($call);
-            $based_call = base64_encode(Mage::helper('core')->jsonEncode($call));
-            $signature = md5($based_call.$this->getApiSecret());
+            $basedCall = base64_encode(Mage::helper('core')->jsonEncode($call));
+            $signature = md5($basedCall.$this->getApiSecret());
             // Use Varien_Http_Client
             // to generate API call end point and call it
-            $url = 'http://p.metrilo.com/t?s='.$signature.'&hs='.$based_call;
+            $url = 'http://p.metrilo.com/t?s='.$signature.'&hs='.$basedCall;
             $client = new Varien_Http_Client($url);
             $response = $client->request();
             $result = Mage::helper('core')->jsonDecode($response->getBody());
@@ -167,18 +167,18 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             // Additional ksort here because of adding token param
             ksort($call);
 
-            $based_call = base64_encode(Mage::helper('core')->jsonEncode($call));
-            $signature = md5($based_call.$this->getApiSecret());
+            $basedCall = base64_encode(Mage::helper('core')->jsonEncode($call));
+            $signature = md5($basedCall.$this->getApiSecret());
 
             $url = 'http://p.metrilo.com/bt';
             $client = new Varien_Http_Client($url);
 
-            $request_body = array(
+            $requestBody = array(
                 's'   => $signature,
-                'hs'  => $based_call
+                'hs'  => $basedCall
             );
             // This method supports passing named array as well as key, value
-            $client->setParameterPost($request_body);
+            $client->setParameterPost($requestBody);
             $response = $client->request('POST');
 
             if ($response->isError()) {
