@@ -133,28 +133,11 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
     public function callApi($ident, $event, $params, $identityData = false, $time = false, $callParameters = false)
     {
         try {
-            $call = array(
-                'event_type'    => $event,
-                'params'        => $params,
-                'uid'           => $ident,
-                'token'         => $this->getApiToken()
-            );
-            if($time) {
-                $call['time'] = $time;
-            }
+            $call = $this->buildEventArray($ident, $event, $params, $identityData, $time, $callParameters);
+            // We should handle the setting of token parameter, as it's part of the request
+            $call['token'] = $this->getApiToken();
 
-            // check for special parameters to include in the API call
-            if($callParameters) {
-                if($callParameters['use_ip']) {
-                    $call['use_ip'] = $callParameters['use_ip'];
-                }
-            }
-            // put identity data in call if available
-            if($identityData) {
-                $call['identity'] = $identityData;
-            }
-
-            // sort for salting and prepare base64
+            // Additional ksort here because of adding token param
             ksort($call);
             $based_call = base64_encode(Mage::helper('core')->jsonEncode($call));
             $signature = md5($based_call.$this->getApiSecret());
@@ -170,5 +153,78 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
         } catch (Exception $e){
             Mage::log($e->getMessage(), null, 'Metrilo_Analytics.log');
         }
+    }
+
+    public function callBatchApi($ordersForSubmition)
+    {
+        try {
+            // Consider token is in the first level in the hashed json
+            $call = array(
+                'token'    => $this->getApiToken(),
+                'events'   => $ordersForSubmition
+            );
+
+            // Additional ksort here because of adding token param
+            ksort($call);
+
+            $based_call = base64_encode(Mage::helper('core')->jsonEncode($call));
+            $signature = md5($based_call.$this->getApiSecret());
+
+            $url = 'http://p.metrilo.com/bt';
+            $client = new Varien_Http_Client($url);
+
+            $request_body = array(
+                's'   => $signature,
+                'hs'  => $based_call
+            );
+            // This method supports passing named array as well as key, value
+            $client->setParameterPost($request_body);
+            $response = $client->request('POST');
+
+            if ($response->isError()) {
+                Mage::log($response->getBody()['error'], null, 'Metrilo_Analytics.log');
+            }
+        } catch (Exception $e) {
+            Mage::log($e->getMessage(), null, 'Metrilo_Analytics.log');
+        }
+    }
+
+    /**
+     * Build event array ready for encoding and encrypting. Built array is returned using ksort.
+     *
+     * @param  string  $ident
+     * @param  string  $event
+     * @param  array  $params
+     * @param  boolean|array $identityData
+     * @param  boolean|int $time
+     * @param  boolean|array $callParameters
+     * @return void
+     */
+    public function buildEventArray($ident, $event, $params, $identityData = false, $time = false, $callParameters = false)
+    {
+      $call = array(
+          'event_type'    => $event,
+          'params'        => $params,
+          'uid'           => $ident
+      );
+      if($time) {
+          $call['time'] = $time;
+      }
+
+      // check for special parameters to include in the API call
+      if($callParameters) {
+          if($callParameters['use_ip']) {
+              $call['use_ip'] = $callParameters['use_ip'];
+          }
+      }
+      // put identity data in call if available
+      if($identityData) {
+          $call['identity'] = $identityData;
+      }
+
+      // Prepare keys is alphabetical order
+      ksort($call);
+
+      return $call;
     }
 }

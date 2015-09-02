@@ -55,7 +55,7 @@ class Metrilo_Analytics_Model_Observer
         if($action == 'catalog_category_view') {
             $category = Mage::registry('current_category');
             $data =  array(
-                'id'    =>  $category->getId(), 
+                'id'    =>  $category->getId(),
                 'name'  =>  $category->getName()
             );
             $helper->addEvent('track', 'view_category', $data);
@@ -235,7 +235,7 @@ class Metrilo_Analytics_Model_Observer
 
         // check if order has customer IP in it
         $ip = $order->getRemoteIp();
-        if($ip){
+        if ($ip){
             $callParameters = array('use_ip' => $ip);
         }
 

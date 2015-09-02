@@ -20,6 +20,8 @@ class Metrilo_Analytics_Adminhtml_AjaxController extends Mage_Adminhtml_Controll
             $import = Mage::getSingleton('metrilo_analytics/import');
             $chunkId = (int)$this->getRequest()->getParam('chunk_id');
             $orders = $import->getOrders($chunkId);
+            $ordersForSubmition = array();
+
             foreach ($orders as $order) {
                 if ($order->getId()) {
                     $orderDetails = $helper->prepareOrderDetails($order);
@@ -43,9 +45,16 @@ class Metrilo_Analytics_Adminhtml_AjaxController extends Mage_Adminhtml_Controll
                         'last_name'     => $order->getBillingAddress()->getLastname(),
                         'name'          => $order->getBillingAddress()->getName(),
                     );
-                    $helper->callApi($identityData['email'], 'order', $orderDetails, $identityData, $time, $callParameters);
+
+                    $builtEventArray = $helper->buildEventArray(
+                      $identityData['email'], 'order', $orderDetails, $identityData, $time, $callParameters
+                    )
+
+                    array_push($ordersForSubmition, $builtEventArray);
                 }
             }
+
+            $helper->callBatchApi($ordersForSubmition);
             $result['success'] = true;
         } catch (Exception $e) {
             Mage::logException($e);
