@@ -85,7 +85,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
         );
 
         if ($order->getCouponCode()) {
-            $data['coupons'] = $order->getCouponCode();
+            $data['coupons'] = array($order->getCouponCode());
         }
         $skusAdded = array();
         foreach ($order->getAllItems() as $item) {
