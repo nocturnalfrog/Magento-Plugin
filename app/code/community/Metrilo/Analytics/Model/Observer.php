@@ -200,6 +200,18 @@ class Metrilo_Analytics_Model_Observer
         $order = $observer->getOrder();
         if ($order->getId()) {
             $data = $helper->prepareOrderDetails($order);
+            if($order->getCustomerIsGuest()) {
+                $identify = array(
+                    'id' => null,
+                    'params' => array(
+                        'email'         => $order->getCustomerEmail(),
+                        'name'          => $order->getCustomerFirstname(). ' '. $order->getCustomerLastname(),
+                        'first_name'    => $order->getCustomerFirstname(),
+                        'last_name'     => $order->getCustomerLastname(),
+                    )
+                );
+                $helper->addEvent('identify', 'identify', $identify);
+            }
             $helper->addEvent('track', 'order', $data);
         }
     }
