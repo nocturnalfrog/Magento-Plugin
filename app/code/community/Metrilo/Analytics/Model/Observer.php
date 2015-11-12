@@ -202,7 +202,7 @@ class Metrilo_Analytics_Model_Observer
             $data = $helper->prepareOrderDetails($order);
             if($order->getCustomerIsGuest()) {
                 $identify = array(
-                    'id' => null,
+                    'id' => $order->getCustomerEmail(),
                     'params' => array(
                         'email'         => $order->getCustomerEmail(),
                         'name'          => $order->getCustomerFirstname(). ' '. $order->getCustomerLastname(),
