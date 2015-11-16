@@ -45,6 +45,20 @@ class Metrilo_Analytics_Model_Observer
         $helper = Mage::helper('metrilo_analytics');
         $action = $observer->getEvent()->getAction()->getFullActionName();
         $pageTracked = false;
+
+        // Catalog search pages
+        if ($action == 'catalogsearch_result_index') {
+            $query = Mage::helper('catalogsearch')->getQuery();
+            if ($text = $query->getQueryText()) {
+                $resultCount = Mage::app()->getLayout()->getBlock('search.result')->getResultCount();
+                $params = array(
+                    'query' => $text,
+                    'result_count' => $resultCount
+                );
+                $helper->addEvent('track', 'search', $params);
+                $pageTracked = true;
+            }
+        }
         // homepage & CMS pages
         if ($action == 'cms_index_index' || $action == 'cms_page_view') {
             $title = Mage::getSingleton('cms/page')->getTitle();
