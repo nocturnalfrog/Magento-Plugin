@@ -56,7 +56,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function addEvent($method, $type, $data, $metaData)
     {
-        $events = [];
+        $events = array();
 
         if ($this->getSession()->getData(Metrilo_Analytics_Block_Head::DATA_TAG != '')) {
             $events = (array)$this->getSession()->getData(Metrilo_Analytics_Block_Head::DATA_TAG);
