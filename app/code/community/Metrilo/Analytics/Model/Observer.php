@@ -44,6 +44,12 @@ class Metrilo_Analytics_Model_Observer
     {
         $helper = Mage::helper('metrilo_analytics');
         $action = $observer->getEvent()->getAction()->getFullActionName();
+
+        if ($this->_isRejected($action))
+        {
+            return;
+        }
+
         $pageTracked = false;
 
         // Catalog search pages
@@ -59,6 +65,7 @@ class Metrilo_Analytics_Model_Observer
                 $pageTracked = true;
             }
         }
+
         // homepage & CMS pages
         if ($action == 'cms_index_index' || $action == 'cms_page_view') {
             $title = Mage::getSingleton('cms/page')->getTitle();
@@ -117,6 +124,19 @@ class Metrilo_Analytics_Model_Observer
             $title = $observer->getEvent()->getLayout()->getBlock('head')->getTitle();
             $helper->addEvent('track', 'pageview', $title);
         }
+    }
+
+    /**
+    * Events that we don't want to track
+    *
+    * @param string event [descrtiption]
+    */
+    private function _isRejected(string $event)
+    {
+        return in_array(
+          $event,
+          array('catalogsearch_advanced_result', 'catalogsearch_advanced_index')
+        );
     }
 
     /**
