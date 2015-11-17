@@ -45,8 +45,7 @@ class Metrilo_Analytics_Model_Observer
         $helper = Mage::helper('metrilo_analytics');
         $action = $observer->getEvent()->getAction()->getFullActionName();
 
-        if ($this->_isRejected($action))
-        {
+        if ($this->_isRejected($action)) {
             return;
         }
 
@@ -126,13 +125,13 @@ class Metrilo_Analytics_Model_Observer
     /**
     * Events that we don't want to track
     *
-    * @param string event [descrtiption]
+    * @param string event
     */
     private function _isRejected(string $event)
     {
         return in_array(
-          $event,
-          array('catalogsearch_advanced_result', 'catalogsearch_advanced_index')
+            $event,
+            array('catalogsearch_advanced_result', 'catalogsearch_advanced_index')
         );
     }
 
