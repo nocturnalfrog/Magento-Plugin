@@ -171,9 +171,13 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
     {
         try {
             // Consider token is in the first level in the hashed json
+            $version = (string)Mage::getConfig()->getModuleConfig("Metrilo_Analytics")->version;
             $call = array(
                 'token'    => $this->getApiToken(),
-                'events'   => $ordersForSubmition
+                'events'   => $ordersForSubmition,
+                // for debugging/support purposes
+                'platform' => 'Magento ' . Mage::getEdition() . ' ' . Mage::getVersion(),
+                'version'  => $version
             );
 
             // Additional ksort here because of adding token param
