@@ -43,7 +43,7 @@ class Metrilo_Analytics_Model_Observer
     public function trackPageView(Varien_Event_Observer $observer)
     {
         $helper = Mage::helper('metrilo_analytics');
-        $action = $observer->getEvent()->getAction()->getFullActionName();
+        $action = (string)$observer->getEvent()->getAction()->getFullActionName();
 
         if ($this->_isRejected($action)) {
             return;
@@ -127,7 +127,7 @@ class Metrilo_Analytics_Model_Observer
     *
     * @param string event
     */
-    private function _isRejected(string $event)
+    private function _isRejected($event)
     {
         return in_array(
             $event,
