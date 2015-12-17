@@ -15,7 +15,7 @@ metrilo.load("<?php echo $helper->getApiToken(); ?>");
         <?php if(is_array($event['data'])): ?>
             metrilo.event("<?php echo $event['type']; ?>", <?php echo json_encode($event['data']); ?>);
         <?php else : ?>
-            <?php if($event['metaData']) : ?>
+            <?php if(array_key_exists('metaData', $event)) : ?>
                 metrilo.event("<?php echo $event['type']; ?>", "<?php echo $event['data']; ?>", <?php echo json_encode($event['metaData']); ?>);
             <?php else : ?>
                 metrilo.event("<?php echo $event['type']; ?>", "<?php echo $event['data']; ?>");
