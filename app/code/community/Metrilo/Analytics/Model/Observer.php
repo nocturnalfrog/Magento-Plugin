@@ -17,7 +17,7 @@ class Metrilo_Analytics_Model_Observer
         $helper = Mage::helper('metrilo_analytics');
         $customer = $observer->getEvent()->getCustomer();
         $data = array(
-            'id' => $customer->getId(),
+            'id' => $customer->getEmail(),
             'params' => array(
                 'email'         => $customer->getEmail(),
                 'name'          => $customer->getName(),
