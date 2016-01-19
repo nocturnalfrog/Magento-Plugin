@@ -48,6 +48,10 @@ class Metrilo_Analytics_Model_Observer
         if ($this->_isRejected($action)) {
             return;
         }
+        // Those 2 lines are checking for AJAX events
+        // if ($observer->getEvent()->getAction()->getRequest()->isAjax()) {
+        //     return;
+        // }
 
         // Catalog search pages
         if ($action == 'catalogsearch_result_index') {
@@ -116,10 +120,6 @@ class Metrilo_Analytics_Model_Observer
             $helper->addEvent('track', 'checkout_start', array());
             return;
         }
-
-        // Any other pages
-        $title = $observer->getEvent()->getLayout()->getBlock('head')->getTitle();
-        $helper->addEvent('track', 'pageview', $title, array('backend_hook' => $action));
     }
 
     /**
