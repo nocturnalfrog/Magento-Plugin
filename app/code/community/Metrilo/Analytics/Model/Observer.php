@@ -116,7 +116,7 @@ class Metrilo_Analytics_Model_Observer
             return;
         }
         // checkout
-        if ($action != 'checkout_cart_index' && strpos($action, 'checkout') !== false && strpos($action, 'success') === false) {
+        if ($action != 'checkout_cart_index' && strpos($action, 'checkout') !== false && strpos($action, 'success') === false && strpos($action, 'add') === false) {
             $helper->addEvent('track', 'checkout_start', array());
             return;
         }
