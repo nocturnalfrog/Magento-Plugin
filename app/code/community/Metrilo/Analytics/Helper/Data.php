@@ -72,7 +72,11 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             $eventToAdd['metaData'] = $metaData;
         }
 
-        array_push($events, $eventToAdd);
+        if ($method == 'identify') {
+            array_unshift($events, $eventToAdd);
+        } else {
+            array_push($events, $eventToAdd);
+        }
 
         $this->getSession()->setData(Metrilo_Analytics_Block_Head::DATA_TAG, $events);
     }
