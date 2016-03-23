@@ -1,8 +1,9 @@
 <?php
 /**
- * Catch events and track them to metrilo api
+ * Catch events and track them to Metrilo API
  *
  * @author Miroslav Petrov <miro91tn@gmail.com>
+ * @author Zhivko Draganov <zhivko@metrilo.com>
  */
 class Metrilo_Analytics_Model_Observer
 {
@@ -269,31 +270,7 @@ class Metrilo_Analytics_Model_Observer
      */
     public function updateOrder(Varien_Event_Observer $observer)
     {
-        $helper = Mage::helper('metrilo_analytics');
-        $order = $observer->getOrder();
-        $orderDetails = $helper->prepareOrderDetails($order);
-
-        $callParameters = false;
-
-        // check if order has customer IP in it
-        $ip = $order->getRemoteIp();
-        if ($ip){
-            $callParameters = array('use_ip' => $ip);
-        }
-
-        $time = false;
-        if ($order->getCreatedAtStoreDate()) {
-            $time = $order->getCreatedAtStoreDate()->getTimestamp() * 1000;
-        }
-
-        $identityData = array(
-            'email'         => $order->getCustomerEmail(),
-            'first_name'    => $order->getBillingAddress()->getFirstname(),
-            'last_name'     => $order->getBillingAddress()->getLastname(),
-            'name'          => $order->getBillingAddress()->getName(),
-        );
-
-        $helper->callApi($identityData['email'], 'order', $orderDetails, $identityData, $time, $callParameters);
+        $helper->callApi($observer->getOrder());
     }
 
 }
