@@ -158,7 +158,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
     */
     public function callBatchApi($orders, $async = false)
     {
-        try {
+        // try {
             $ordersForSubmition = $this->_buildOrdersForSubmition($orders);
             $call = $this->_buildCall($ordersForSubmition);
 
@@ -167,9 +167,9 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             } else {
                 $this->_callMetriloApi($call);
             }
-        } catch (Exception $e) {
-            Mage::log($e->getMessage(), null, 'Metrilo_Analytics.log');
-        }
+        // } catch (Exception $e) {
+        //     Mage::log($e->getMessage(), null, 'Metrilo_Analytics.log');
+        // }
     }
 
     // Private functions start here

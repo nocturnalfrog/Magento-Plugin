@@ -34,11 +34,9 @@ class Metrilo_Analytics_Helper_AsyncHttpClient extends Mage_Core_Helper_Abstract
     */
     public function post($url, $bodyArray = false) {
         $parsedUrl = parse_url($url);
-        $raw = $this->_getHeaders($parsedUrl['host'], $parsedUrl['path']);
+        $encodedBody = $bodyArray ? jsonEncode($bodyArray) : ''
 
-        if ($bodyArray) {
-            $raw .= jsonEncode($bodyArray);
-        }
+        $raw = $this->_postHeaders($parsedUrl['host'], $parsedUrl['path'], $encodedBody);
 
         $fp = fsockopen(
             $parsedUrl['host'],
@@ -58,12 +56,12 @@ class Metrilo_Analytics_Helper_AsyncHttpClient extends Mage_Core_Helper_Abstract
         return $out;
     }
 
-    private function _postHeaders($host, $path) {
+    private function _postHeaders($host, $path, $encodedCall) {
         $out  = "POST ".$path." HTTP/1.1\r\n";
         $out .= "Host: ".$host."\r\n";
         // $out .= "Accept: application/json\r\n";
         $out .= "Content-Type: application/json\r\n";
-        $out .= "Content-Length: ".strlen($encoded_call)."\r\n";
+        $out .= "Content-Length: ".strlen($encodedCall)."\r\n";
         $out .= "Connection: close\r\n\r\n";
 
         return $out;
