@@ -21,7 +21,7 @@
             jQuery.post('<?php echo $this->getAjaxUrl(); ?>', data, function(response) {
                 new_chunk_id = chunk_id + 1;
                 if(new_chunk_id < total_chunks){
-                    setTimeout(function(){
+                    setTimeout(function() {
                         sync_chunk(new_chunk_id);
                     }, 100);
                 }else{

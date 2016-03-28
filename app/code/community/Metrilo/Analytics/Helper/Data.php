@@ -100,6 +100,8 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             'payment_method'    => $order->getPayment()->getMethodInstance()->getTitle(),
         );
 
+        $this->_assignBillingInfo($data, $order);
+
         if ($order->getCouponCode()) {
             $data['coupons'] = array($order->getCouponCode());
         }
@@ -132,6 +134,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             }
             $data['items'][] = $dataItem;
         }
+
         return $data;
     }
 
@@ -151,25 +154,24 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-    * Create HTTP request to Metrilo API to sync multiple orders
-    *
-    * @param Array(Mage_Sales_Model_Order) $orders
-    * @return void
-    */
+     * Create HTTP request to Metrilo API to sync multiple orders
+     *
+     * @param Array(Mage_Sales_Model_Order) $orders
+     * @return void
+     */
     public function callBatchApi($orders, $async = false)
     {
-        // try {
+        try {
             $ordersForSubmition = $this->_buildOrdersForSubmition($orders);
             $call = $this->_buildCall($ordersForSubmition);
-
             if ($async) {
                 $this->_callMetriloApiAsync($call);
             } else {
                 $this->_callMetriloApi($call);
             }
-        // } catch (Exception $e) {
-        //     Mage::log($e->getMessage(), null, 'Metrilo_Analytics.log');
-        // }
+        } catch (Exception $e) {
+            Mage::log($e->getMessage(), null, 'Metrilo_Analytics.log');
+        }
     }
 
     // Private functions start here
@@ -211,10 +213,10 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-    * Create submition ready arrays from Array of Mage_Sales_Model_Order
-    * @param Array(Mage_Sales_Model_Order) $orders
-    * @return Array of Arrays
-    */
+     * Create submition ready arrays from Array of Mage_Sales_Model_Order
+     * @param Array(Mage_Sales_Model_Order) $orders
+     * @return Array of Arrays
+     */
     private function _buildOrdersForSubmition($orders) {
         $ordersForSubmition = array();
 
@@ -240,30 +242,30 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
      */
     private function _buildEventArray($ident, $event, $params, $identityData = false, $time = false, $callParameters = false)
     {
-      $call = array(
-          'event_type'    => $event,
-          'params'        => $params,
-          'uid'           => $ident
-      );
-      if($time) {
-          $call['time'] = $time;
-      }
+        $call = array(
+            'event_type'    => $event,
+            'params'        => $params,
+            'uid'           => $ident
+        );
+        if($time) {
+            $call['time'] = $time;
+        }
 
-      // check for special parameters to include in the API call
-      if($callParameters) {
-          if($callParameters['use_ip']) {
-              $call['use_ip'] = $callParameters['use_ip'];
-          }
-      }
-      // put identity data in call if available
-      if($identityData) {
-          $call['identity'] = $identityData;
-      }
+        // check for special parameters to include in the API call
+        if($callParameters) {
+            if($callParameters['use_ip']) {
+                $call['use_ip'] = $callParameters['use_ip'];
+            }
+        }
+        // put identity data in call if available
+        if($identityData) {
+            $call['identity'] = $identityData;
+        }
 
-      // Prepare keys is alphabetical order
-      ksort($call);
+        // Prepare keys is alphabetical order
+        ksort($call);
 
-      return $call;
+        return $call;
     }
 
     private function _buildOrderForSubmition($order) {
@@ -272,7 +274,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
         $callParameters = false;
         // check if order has customer IP in it
         $ip = $order->getRemoteIp();
-        if($ip){
+        if ($ip) {
             $callParameters = array('use_ip' => $ip);
         }
         // initialize time
@@ -306,5 +308,18 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             'platform' => 'Magento ' . Mage::getEdition() . ' ' . Mage::getVersion(),
             'version'  => (string)Mage::getConfig()->getModuleConfig("Metrilo_Analytics")->version
         );
+    }
+
+    private function _assignBillingInfo(&$data, $order)
+    {
+        $billingAddress = $order->getBillingAddress();
+        # Assign billing data to order data array
+        $data['billing_phone']    = $billingAddress->getTelephone();
+        $data['billing_country']  = $billingAddress->getCountryId();
+        $data['billing_region']   = $billingAddress->getRegion();
+        $data['billing_city']     = $billingAddress->getCity();
+        $data['billing_postcode'] = $billingAddress->getPostcode();
+        $data['billing_address']  = $billingAddress->getStreetFull();
+        $data['billing_company']  = $billingAddress->getCompany();
     }
 }

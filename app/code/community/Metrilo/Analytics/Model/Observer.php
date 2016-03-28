@@ -198,8 +198,6 @@ class Metrilo_Analytics_Model_Observer
                 $helper->addEvent('identify', 'identify', $identify);
             }
             $helper->addEvent('track', 'order', $data);
-            Mage::log('trackNewOrder');
-            $helper->callApi($order, true);
         }
     }
 
@@ -226,7 +224,6 @@ class Metrilo_Analytics_Model_Observer
      */
     public function updateOrder(Varien_Event_Observer $observer)
     {
-        Mage::log('updateOrder');
         $helper = Mage::helper('metrilo_analytics');
         $helper->callApi($observer->getOrder(), true);
     }
@@ -251,7 +248,8 @@ class Metrilo_Analytics_Model_Observer
      * @param Mage_Catalog_Model_Product  $item
      * @param integer $qty
      */
-    private function _addToCart($productId, $item, $qty) {
+    private function _addToCart($productId, $item, $qty)
+    {
         $helper = Mage::helper('metrilo_analytics');
         $product = Mage::getModel('catalog/product')->load($productId);
 
