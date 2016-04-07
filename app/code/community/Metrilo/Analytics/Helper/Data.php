@@ -50,7 +50,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Add event to queue
      *
-     * @param string $method Can be identiy|track
+     * @param string $method Can be identify|track
      * @param string $type
      * @param string|array $data
      */
@@ -100,6 +100,8 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             'payment_method'    => $order->getPayment()->getMethodInstance()->getTitle(),
         );
 
+        $this->_assignBillingInfo($data, $order);
+
         if ($order->getCouponCode()) {
             $data['coupons'] = array($order->getCouponCode());
         }
@@ -132,81 +134,99 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             }
             $data['items'][] = $dataItem;
         }
+
         return $data;
     }
 
     /**
-     * Create HTTP request to metrilo server
+     * Create HTTP request to Metrilo API to sync single order
      *
-     * @param  string  $ident
-     * @param  string  $event
-     * @param  array  $params
-     * @param  boolean|array $identityData
-     * @param  boolean|int $time
-     * @param  boolean|array $callParameters
+     * @param  Mage_Sales_Model_Order $order
      * @return void
      */
-    public function callApi($ident, $event, $params, $identityData = false, $time = false, $callParameters = false)
+    public function callApi($order, $async = false)
     {
         try {
-            $call = $this->buildEventArray($ident, $event, $params, $identityData, $time, $callParameters);
-            // We should handle the setting of token parameter, as it's part of the request
-            $call['token'] = $this->getApiToken();
-
-            // Additional ksort here because of adding token param
-            ksort($call);
-            $basedCall = base64_encode(Mage::helper('core')->jsonEncode($call));
-            $signature = md5($basedCall.$this->getApiSecret());
-            // Use Varien_Http_Client
-            // to generate API call end point and call it
-            $url = 'http://p.metrilo.com/t?s='.$signature.'&hs='.$basedCall;
-            $client = new Varien_Http_Client($url);
-            $response = $client->request();
-            $result = Mage::helper('core')->jsonDecode($response->getBody());
-            if (!$result['status']) {
-                Mage::log($result['error'], null, 'Metrilo_Analytics.log');
-            }
+            $this->callBatchApi(array($order), $async);
         } catch (Exception $e){
             Mage::log($e->getMessage(), null, 'Metrilo_Analytics.log');
         }
     }
 
-    public function callBatchApi($ordersForSubmition)
+    /**
+     * Create HTTP request to Metrilo API to sync multiple orders
+     *
+     * @param Array(Mage_Sales_Model_Order) $orders
+     * @return void
+     */
+    public function callBatchApi($orders, $async = false)
     {
         try {
-            // Consider token is in the first level in the hashed json
-            $version = (string)Mage::getConfig()->getModuleConfig("Metrilo_Analytics")->version;
-            $call = array(
-                'token'    => $this->getApiToken(),
-                'events'   => $ordersForSubmition,
-                // for debugging/support purposes
-                'platform' => 'Magento ' . Mage::getEdition() . ' ' . Mage::getVersion(),
-                'version'  => $version
-            );
-
-            // Additional ksort here because of adding token param
-            ksort($call);
-
-            $basedCall = base64_encode(Mage::helper('core')->jsonEncode($call));
-            $signature = md5($basedCall.$this->getApiSecret());
-
-            $url = 'http://p.metrilo.com/bt';
-            $client = new Varien_Http_Client($url);
-
-            $requestBody = array(
-                's'   => $signature,
-                'hs'  => $basedCall
-            );
-            // This method supports passing named array as well as key, value
-            $client->setParameterPost($requestBody);
-            $response = $client->request('POST');
-
-            if ($response->isError()) {
-                Mage::log($response->getBody(), null, 'Metrilo_Analytics.log');
+            $ordersForSubmition = $this->_buildOrdersForSubmition($orders);
+            $call = $this->_buildCall($ordersForSubmition);
+            if ($async) {
+                $this->_callMetriloApiAsync($call);
+            } else {
+                $this->_callMetriloApi($call);
             }
         } catch (Exception $e) {
             Mage::log($e->getMessage(), null, 'Metrilo_Analytics.log');
         }
+    }
+
+    // Private functions start here
+
+    private function _callMetriloApiAsync($call) {
+        ksort($call);
+        $basedCall = base64_encode(Mage::helper('core')->jsonEncode($call));
+        $signature = md5($basedCall.$this->getApiSecret());
+
+        $requestBody = array(
+            's'   => $signature,
+            'hs'  => $basedCall
+        );
+
+        $asyncHttpHelper = Mage::helper('metrilo_analytics/asynchttpclient');
+        $asyncHttpHelper->post('http://p.metrilo.com/bt', $requestBody);
+    }
+
+    private function _callMetriloApi($call) {
+        // Prepare call for submition
+        ksort($call);
+        $basedCall = base64_encode(Mage::helper('core')->jsonEncode($call));
+        $signature = md5($basedCall.$this->getApiSecret());
+
+        $requestBody = array(
+            's'   => $signature,
+            'hs'  => $basedCall
+        );
+
+        $client = new Varien_Http_Client('http://p.metrilo.com/bt');
+
+        // This method supports passing named array as well as key, value
+        $client->setParameterPost($requestBody);
+        $response = $client->request('POST');
+
+        if ($response->isError()) {
+            Mage::log($response->getBody(), null, 'Metrilo_Analytics.log');
+        }
+    }
+
+    /**
+     * Create submition ready arrays from Array of Mage_Sales_Model_Order
+     * @param Array(Mage_Sales_Model_Order) $orders
+     * @return Array of Arrays
+     */
+    private function _buildOrdersForSubmition($orders) {
+        $ordersForSubmition = array();
+
+        foreach ($orders as $order) {
+            if ($order->getId()) {
+                array_push($ordersForSubmition, $this->_buildOrderForSubmition($order));
+            }
+        }
+
+        return $ordersForSubmition;
     }
 
     /**
@@ -220,31 +240,86 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
      * @param  boolean|array $callParameters
      * @return void
      */
-    public function buildEventArray($ident, $event, $params, $identityData = false, $time = false, $callParameters = false)
+    private function _buildEventArray($ident, $event, $params, $identityData = false, $time = false, $callParameters = false)
     {
-      $call = array(
-          'event_type'    => $event,
-          'params'        => $params,
-          'uid'           => $ident
-      );
-      if($time) {
-          $call['time'] = $time;
-      }
+        $call = array(
+            'event_type'    => $event,
+            'params'        => $params,
+            'uid'           => $ident
+        );
+        if($time) {
+            $call['time'] = $time;
+        }
 
-      // check for special parameters to include in the API call
-      if($callParameters) {
-          if($callParameters['use_ip']) {
-              $call['use_ip'] = $callParameters['use_ip'];
-          }
-      }
-      // put identity data in call if available
-      if($identityData) {
-          $call['identity'] = $identityData;
-      }
+        // check for special parameters to include in the API call
+        if($callParameters) {
+            if($callParameters['use_ip']) {
+                $call['use_ip'] = $callParameters['use_ip'];
+            }
+        }
+        // put identity data in call if available
+        if($identityData) {
+            $call['identity'] = $identityData;
+        }
 
-      // Prepare keys is alphabetical order
-      ksort($call);
+        // Prepare keys is alphabetical order
+        ksort($call);
 
-      return $call;
+        return $call;
+    }
+
+    private function _buildOrderForSubmition($order) {
+        $orderDetails = $this->prepareOrderDetails($order);
+        // initialize additional params
+        $callParameters = false;
+        // check if order has customer IP in it
+        $ip = $order->getRemoteIp();
+        if ($ip) {
+            $callParameters = array('use_ip' => $ip);
+        }
+        // initialize time
+        $time = false;
+        if ($order->getCreatedAtStoreDate()) {
+            $time = $order->getCreatedAtStoreDate()->getTimestamp() * 1000;
+        }
+
+        $identityData = $this->_orderIdentityData($order);
+
+        return $this->_buildEventArray(
+            $identityData['email'], 'order', $orderDetails, $identityData, $time, $callParameters
+        );
+    }
+
+
+    private function _orderIdentityData($order) {
+        return array(
+            'email'         => $order->getCustomerEmail(),
+            'first_name'    => $order->getBillingAddress()->getFirstname(),
+            'last_name'     => $order->getBillingAddress()->getLastname(),
+            'name'          => $order->getBillingAddress()->getName(),
+        );
+    }
+
+    private function _buildCall($ordersForSubmition) {
+        return array(
+            'token'    => $this->getApiToken(),
+            'events'   => $ordersForSubmition,
+            // for debugging/support purposes
+            'platform' => 'Magento ' . Mage::getEdition() . ' ' . Mage::getVersion(),
+            'version'  => (string)Mage::getConfig()->getModuleConfig("Metrilo_Analytics")->version
+        );
+    }
+
+    private function _assignBillingInfo(&$data, $order)
+    {
+        $billingAddress = $order->getBillingAddress();
+        # Assign billing data to order data array
+        $data['billing_phone']    = $billingAddress->getTelephone();
+        $data['billing_country']  = $billingAddress->getCountryId();
+        $data['billing_region']   = $billingAddress->getRegion();
+        $data['billing_city']     = $billingAddress->getCity();
+        $data['billing_postcode'] = $billingAddress->getPostcode();
+        $data['billing_address']  = $billingAddress->getStreetFull();
+        $data['billing_company']  = $billingAddress->getCompany();
     }
 }

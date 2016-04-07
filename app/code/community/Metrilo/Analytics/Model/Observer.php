@@ -1,8 +1,9 @@
 <?php
 /**
- * Catch events and track them to metrilo api
+ * Catch events and track them to Metrilo API
  *
  * @author Miroslav Petrov <miro91tn@gmail.com>
+ * @author Zhivko Draganov <zhivko@metrilo.com>
  */
 class Metrilo_Analytics_Model_Observer
 {
@@ -74,7 +75,7 @@ class Metrilo_Analytics_Model_Observer
             return;
         }
         // category view pages
-        if($action == 'catalog_category_view') {
+        if ($action == 'catalog_category_view') {
             $category = Mage::registry('current_category');
             $data =  array(
                 'id'    =>  $category->getId(),
@@ -93,10 +94,10 @@ class Metrilo_Analytics_Model_Observer
                 'url'   => $product->getProductUrl()
             );
             // Additional information ( image and categories )
-            if($product->getImage())
+            if ($product->getImage())
                 $data['image_url'] = (string)Mage::helper('catalog/image')->init($product, 'image');
 
-            if(count($product->getCategoryIds())) {
+            if (count($product->getCategoryIds())) {
                 $categories = array();
                 $collection = $product->getCategoryCollection()->addAttributeToSelect('*');
                 foreach ($collection as $category) {
@@ -111,7 +112,7 @@ class Metrilo_Analytics_Model_Observer
             return;
         }
         // cart view
-        if($action == 'checkout_cart_index') {
+        if ($action == 'checkout_cart_index') {
             $helper->addEvent('track', 'view_cart', array());
             return;
         }
@@ -120,19 +121,6 @@ class Metrilo_Analytics_Model_Observer
             $helper->addEvent('track', 'checkout_start', array());
             return;
         }
-    }
-
-    /**
-    * Events that we don't want to track
-    *
-    * @param string event
-    */
-    private function _isRejected($event)
-    {
-        return in_array(
-            $event,
-            array('catalogsearch_advanced_result', 'catalogsearch_advanced_index')
-        );
     }
 
     /**
@@ -163,39 +151,6 @@ class Metrilo_Analytics_Model_Observer
             $this->_addToCart($cartProduct->getId(), $cartProduct, $item->getQty());
         }
 
-    }
-
-    /**
-     * Add to cart event
-     *
-     * @param integer $productId
-     * @param Mage_Catalog_Model_Product  $item
-     * @param integer $qty
-     */
-    private function _addToCart($productId, $item, $qty) {
-        $helper = Mage::helper('metrilo_analytics');
-        $product = Mage::getModel('catalog/product')->load($productId);
-
-        $data =  array(
-            'id'            => (int)$product->getId(),
-            'price'         => (float)$product->getFinalPrice(),
-            'name'          => $product->getName(),
-            'url'           => $product->getProductUrl(),
-            'quantity'      => $qty
-        );
-
-        // Add options for grouped or configurable products
-        if ($item->isGrouped() || $item->isConfigurable()) {
-            $data['id']     = $item->getId();
-            $data['name']   = $item->getName();
-            $data['url']    = $item->getProductUrl();
-            // Options
-            $data['option_id'] = $product->getSku();
-            $data['option_name'] = trim(str_replace("-", " ", $product->getName()));
-            $data['option_price'] = (float)$product->getFinalPrice();
-        }
-
-        $helper->addEvent('track', 'add_to_cart', $data);
     }
 
     /**
@@ -270,30 +225,53 @@ class Metrilo_Analytics_Model_Observer
     public function updateOrder(Varien_Event_Observer $observer)
     {
         $helper = Mage::helper('metrilo_analytics');
-        $order = $observer->getOrder();
-        $orderDetails = $helper->prepareOrderDetails($order);
-
-        $callParameters = false;
-
-        // check if order has customer IP in it
-        $ip = $order->getRemoteIp();
-        if ($ip){
-            $callParameters = array('use_ip' => $ip);
-        }
-
-        $time = false;
-        if ($order->getCreatedAtStoreDate()) {
-            $time = $order->getCreatedAtStoreDate()->getTimestamp() * 1000;
-        }
-
-        $identityData = array(
-            'email'         => $order->getCustomerEmail(),
-            'first_name'    => $order->getBillingAddress()->getFirstname(),
-            'last_name'     => $order->getBillingAddress()->getLastname(),
-            'name'          => $order->getBillingAddress()->getName(),
-        );
-
-        $helper->callApi($identityData['email'], 'order', $orderDetails, $identityData, $time, $callParameters);
+        $helper->callApi($observer->getOrder(), true);
     }
 
+    /**
+    * Events that we don't want to track
+    *
+    * @param string event
+    */
+    private function _isRejected($event)
+    {
+        return in_array(
+            $event,
+            array('catalogsearch_advanced_result', 'catalogsearch_advanced_index')
+        );
+    }
+
+    /**
+     * Add to cart event
+     *
+     * @param integer $productId
+     * @param Mage_Catalog_Model_Product  $item
+     * @param integer $qty
+     */
+    private function _addToCart($productId, $item, $qty)
+    {
+        $helper = Mage::helper('metrilo_analytics');
+        $product = Mage::getModel('catalog/product')->load($productId);
+
+        $data =  array(
+            'id'            => (int)$product->getId(),
+            'price'         => (float)$product->getFinalPrice(),
+            'name'          => $product->getName(),
+            'url'           => $product->getProductUrl(),
+            'quantity'      => $qty
+        );
+
+        // Add options for grouped or configurable products
+        if ($item->isGrouped() || $item->isConfigurable()) {
+            $data['id']     = $item->getId();
+            $data['name']   = $item->getName();
+            $data['url']    = $item->getProductUrl();
+            // Options
+            $data['option_id'] = $product->getSku();
+            $data['option_name'] = trim(str_replace("-", " ", $product->getName()));
+            $data['option_price'] = (float)$product->getFinalPrice();
+        }
+
+        $helper->addEvent('track', 'add_to_cart', $data);
+    }
 }

@@ -37,6 +37,7 @@ class Metrilo_Analytics_Block_Adminhtml_System_Config_Form_Button extends Mage_A
     {
         $html = parent::_toHtml();
         $helper = Mage::helper('metrilo_analytics');
+
         if($helper->isEnabled() && $helper->getApiToken() && $helper->getApiSecret())
             return $html;
     }
