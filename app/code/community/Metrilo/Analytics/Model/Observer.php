@@ -67,6 +67,11 @@ class Metrilo_Analytics_Model_Observer
                 return;
             }
         }
+        // Fishpigs_Attribute_Splash_Page integration plugin
+        if ($action == 'attributeSplash_page_view') {
+            $this->_viewSplashPage($helper);
+            return;
+        }
 
         // homepage & CMS pages
         if ($action == 'cms_index_index' || $action == 'cms_page_view') {
@@ -273,5 +278,23 @@ class Metrilo_Analytics_Model_Observer
         }
 
         $helper->addEvent('track', 'add_to_cart', $data);
+    }
+
+    /**
+    * Splash page event
+    */
+    private function _viewSplashPage($helper)
+    {
+        $splashPage = Mage::registry('splash_page');
+
+        if (is_null($splashPage) || !$splashPage->canDisplay()) {
+            return false;
+        }
+
+        $data =  array(
+            'id'    =>  'SPL-'.$splashPage->getId(),
+            'name'  =>  $splashPage->getName()
+        );
+        $helper->addEvent('track', 'view_category', $data);
     }
 }
