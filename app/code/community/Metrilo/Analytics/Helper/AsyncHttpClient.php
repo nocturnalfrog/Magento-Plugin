@@ -4,7 +4,7 @@
  *
  * @author Zhivko Draganov <zhivko@metrilo.com>
  */
-class Metrilo_Analytics_Helper_AsyncHttpClient extends Mage_Core_Helper_Abstract
+class Metrilo_Analytics_Helper_Asynchttpclient extends Mage_Core_Helper_Abstract
 {
     /**
     * Create HTTP GET async request to URL
