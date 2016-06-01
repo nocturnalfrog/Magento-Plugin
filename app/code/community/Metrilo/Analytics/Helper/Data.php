@@ -144,7 +144,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
      * @param  Mage_Sales_Model_Order $order
      * @return void
      */
-    public function callApi($order, $async = false)
+    public function callApi($order, $async = true)
     {
         try {
             $this->callBatchApi(array($order), $async);
@@ -159,7 +159,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
      * @param Array(Mage_Sales_Model_Order) $orders
      * @return void
      */
-    public function callBatchApi($orders, $async = false)
+    public function callBatchApi($orders, $async = true)
     {
         try {
             $ordersForSubmition = $this->_buildOrdersForSubmition($orders);
