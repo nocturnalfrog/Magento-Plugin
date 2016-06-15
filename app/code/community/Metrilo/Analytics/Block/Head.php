@@ -33,7 +33,12 @@ class Metrilo_Analytics_Block_Head extends Mage_Core_Block_Template
     protected function _toHtml()
     {
         $html = parent::_toHtml();
-        if(Mage::helper('metrilo_analytics')->isEnabled())
+        $helper = Mage::helper('metrilo_analytics');
+
+        $request = Mage::app()->getRequest();
+        $storeId = $helper->getStoreId($request);
+
+        if($helper->isEnabled($storeId))
             return $html;
     }
 }
