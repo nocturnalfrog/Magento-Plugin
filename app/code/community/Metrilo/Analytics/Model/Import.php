@@ -8,7 +8,7 @@ class Metrilo_Analytics_Model_Import extends Mage_Core_Model_Abstract
 {
     private $_ordersTotal = 0;
     private $_totalChunks = 0;
-    private $_chunkItems = 15;
+    private $_chunkItems  = 15;
 
     /**
      * Prepare all order ids
@@ -18,7 +18,7 @@ class Metrilo_Analytics_Model_Import extends Mage_Core_Model_Abstract
     public function _construct()
     {
         // prepare to fetch all orders
-        $this->_ordersTotal = Mage::getModel('sales/order')->getCollection()->getSize();
+        $this->_ordersTotal = $this->_getOrderQuery()->getSize();
         $this->_totalChunks = (int)ceil($this->_ordersTotal / $this->_chunkItems);
     }
 
@@ -30,8 +30,7 @@ class Metrilo_Analytics_Model_Import extends Mage_Core_Model_Abstract
      */
     public function getOrders($chunkId)
     {
-        return Mage::getModel('sales/order')
-                    ->getCollection()
+        return $this->_getOrderQuery()
                     ->setPageSize($this->_chunkItems)
                     ->setCurPage($chunkId + 1);
     }
@@ -44,5 +43,20 @@ class Metrilo_Analytics_Model_Import extends Mage_Core_Model_Abstract
     public function getChunks()
     {
         return $this->_totalChunks;
+    }
+
+    private function _getOrderQuery()
+    {
+        return Mage::getModel('sales/order')
+                    ->getCollection()
+                    ->addAttributeToFilter('store_id', $this->_getStoreId());
+    }
+
+    private function _getStoreId()
+    {
+        $helper  = Mage::helper('metrilo_analytics');
+        $request = Mage::app()->getRequest();
+
+        return $helper->getStoreId($request);
     }
 }

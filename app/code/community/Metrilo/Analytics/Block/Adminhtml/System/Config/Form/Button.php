@@ -29,17 +29,30 @@ class Metrilo_Analytics_Block_Adminhtml_System_Config_Form_Button extends Mage_A
     }
 
     /**
-     * Render metrilo js if module is enabled
+     * Get import instance
      *
-     * @return string
+     * @return boolean
      */
-    protected function _toHtml()
+    public function showInStore()
     {
-        $html = parent::_toHtml();
+        return Mage::app()->getRequest()->getParam('store');
+    }
+
+
+    /**
+     * Get import instance
+     *
+     * @return boolean
+     */
+    public function buttonEnabled()
+    {
         $helper = Mage::helper('metrilo_analytics');
 
-        if($helper->isEnabled() && $helper->getApiToken() && $helper->getApiSecret())
-            return $html;
+        $request = Mage::app()->getRequest();
+        $storeId = $helper->getStoreId($request);
+
+         return $helper->isEnabled($storeId) &&
+            $helper->getApiToken($storeId) && $helper->getApiSecret($storeId);
     }
 
     /**
@@ -70,12 +83,13 @@ class Metrilo_Analytics_Block_Adminhtml_System_Config_Form_Button extends Mage_A
     */
     public function getButtonHtml()
     {
-        $button = $this->getLayout()->createBlock('adminhtml/widget_button')
-        ->setData(array(
-            'id'        => 'metrilo_button',
-            'label'     => $this->helper('adminhtml')->__('Import orders'),
-            'onclick'   => 'javascript:import_metrilo(); return false;'
-            ));
+        $button = $this->getLayout()
+                       ->createBlock('adminhtml/widget_button')
+                       ->setData(array(
+                           'id'        => 'metrilo_button',
+                           'label'     => $this->helper('adminhtml')->__('Import orders'),
+                           'onclick'   => 'javascript:import_metrilo(); return false;'
+                       ));
 
         return $button->toHtml();
     }
