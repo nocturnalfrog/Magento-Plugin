@@ -44,9 +44,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function isEnabled($storeId = null)
     {
-        return Mage::getStoreConfig(
-            'metrilo_analytics_settings/settings/enable',
-            Mage::app()->getStore($storeId));
+        return Mage::getStoreConfig('metrilo_analytics_settings/settings/enable', $storeId);
     }
 
     /**
@@ -56,9 +54,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getApiToken($storeId = null)
     {
-        return Mage::getStoreConfig(
-            'metrilo_analytics_settings/settings/api_key',
-            Mage::app()->getStore($storeId));
+        return Mage::getStoreConfig('metrilo_analytics_settings/settings/api_key', $storeId);
     }
 
     /**
@@ -68,9 +64,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getApiSecret($storeId = null)
     {
-        return Mage::getStoreConfig(
-            'metrilo_analytics_settings/settings/api_secret',
-            Mage::app()->getStore($storeId));
+        return Mage::getStoreConfig('metrilo_analytics_settings/settings/api_secret', $storeId);
     }
 
     /**

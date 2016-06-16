@@ -38,21 +38,21 @@ class Metrilo_Analytics_Block_Adminhtml_System_Config_Form_Button extends Mage_A
         return Mage::app()->getRequest()->getParam('store');
     }
 
+
     /**
-     * Render metrilo js if module is enabled
+     * Get import instance
      *
-     * @return string
+     * @return boolean
      */
-    protected function _toHtml()
+    public function buttonEnabled()
     {
-        $html = parent::_toHtml();
         $helper = Mage::helper('metrilo_analytics');
 
         $request = Mage::app()->getRequest();
         $storeId = $helper->getStoreId($request);
 
-        if($helper->isEnabled($storeId) && $helper->getApiToken($storeId) && $helper->getApiSecret($storeId))
-            return $html;
+         return $helper->isEnabled($storeId) &&
+            $helper->getApiToken($storeId) && $helper->getApiSecret($storeId);
     }
 
     /**
