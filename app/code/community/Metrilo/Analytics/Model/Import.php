@@ -19,7 +19,6 @@ class Metrilo_Analytics_Model_Import extends Mage_Core_Model_Abstract
     {
         // prepare to fetch all orders
         $this->_ordersTotal = $this->_getOrderQuery()->getSize();
-        Mage::log('Orders total: '.$this->_ordersTotal, null, 'Metrilo_Analytics.log');
         $this->_totalChunks = (int)ceil($this->_ordersTotal / $this->_chunkItems);
     }
 
@@ -48,7 +47,6 @@ class Metrilo_Analytics_Model_Import extends Mage_Core_Model_Abstract
 
     private function _getOrderQuery()
     {
-        Mage::log('Store id: '.$this->_getStoreId(), null, 'Metrilo_Analytics.log');
         return Mage::getModel('sales/order')
                     ->getCollection()
                     ->addAttributeToFilter('store_id', $this->_getStoreId());

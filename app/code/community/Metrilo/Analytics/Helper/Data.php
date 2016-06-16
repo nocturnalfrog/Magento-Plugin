@@ -28,7 +28,6 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             $storeCode = $request->getParam('store');
 
             if ($storeCode) {
-                Mage::log('Store code found: '.$storeCode, null, 'Metrilo_Analytics.log');
                 return Mage::getModel('core/store')->load($storeCode)->getId();
             }
         }
