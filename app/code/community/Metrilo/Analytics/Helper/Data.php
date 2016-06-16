@@ -167,7 +167,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
     {
         try {
             $ordersForSubmition = $this->_buildOrdersForSubmition($orders);
-            $call = $this->_buildCall($ordersForSubmition);
+            $call = $this->_buildCall($storeId, $ordersForSubmition);
 
             $this->_callMetriloApiAsync($storeId, $call);
         } catch (Exception $e) {
@@ -188,7 +188,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
         );
 
         $asyncHttpHelper = Mage::helper('metrilo_analytics/asynchttpclient');
-        $asyncHttpHelper->post('http://localhost:3000/bt', $requestBody);
+        $asyncHttpHelper->post('http://p.metrilo.com/bt', $requestBody);
     }
 
     /**
@@ -279,12 +279,7 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
         );
     }
 
-    private function _buildCall($ordersForSubmition) {
-        $helper = Mage::helper('metrilo_analytics');
-
-        $request = Mage::app()->getRequest();
-        $storeId = $helper->getStoreId($request);
-
+    private function _buildCall($storeId, $ordersForSubmition) {
         return array(
             'token'    => $this->getApiToken($storeId),
             'events'   => $ordersForSubmition,
