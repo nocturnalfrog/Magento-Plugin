@@ -229,8 +229,10 @@ class Metrilo_Analytics_Model_Observer
      */
     public function updateOrder(Varien_Event_Observer $observer)
     {
+        $order = $observer->getOrder();
+
         $helper = Mage::helper('metrilo_analytics');
-        $helper->callBatchApi(array($observer->getOrder()));
+        $helper->callBatchApi($order->getStoreId(), array($order));
     }
 
     /**
