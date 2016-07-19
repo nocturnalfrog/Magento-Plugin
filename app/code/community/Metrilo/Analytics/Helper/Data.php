@@ -226,10 +226,12 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             'params'        => $params,
             'uid'           => $ident
         );
+
         if($time) {
             $call['time'] = $time;
         }
 
+        $call['server_time'] = round(microtime(true) * 1000);
         // check for special parameters to include in the API call
         if($callParameters) {
             if($callParameters['use_ip']) {
@@ -240,7 +242,6 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
         if($identityData) {
             $call['identity'] = $identityData;
         }
-
         // Prepare keys is alphabetical order
         ksort($call);
 
