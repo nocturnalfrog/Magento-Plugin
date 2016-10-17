@@ -58,11 +58,16 @@ class Metrilo_Analytics_Model_Observer
         if ($action == 'catalogsearch_result_index') {
             $query = Mage::helper('catalogsearch')->getQuery();
             if ($text = $query->getQueryText()) {
-                $resultCount = Mage::app()->getLayout()->getBlock('search.result')->getResultCount();
+                $searchResultBlock = Mage::app()->getLayout()->getBlock('search.result');
+
                 $params = array(
-                    'query' => $text,
-                    'result_count' => $resultCount
+                    'query' => $text
                 );
+
+                if ($searchResultBlock) {
+                    $params['result_count'] = $searchResultBlock->getResultCount();
+                }
+
                 $helper->addEvent('track', 'search', $params);
                 return;
             }
