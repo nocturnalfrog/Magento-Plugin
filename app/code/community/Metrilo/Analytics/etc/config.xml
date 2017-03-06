@@ -8,7 +8,7 @@
 <config>
     <modules>
         <Metrilo_Analytics>
-            <version>1.1.8</version>
+            <version>1.2.2</version>
         </Metrilo_Analytics>
     </modules>
     <frontend>
