@@ -49,6 +49,12 @@ class Metrilo_Analytics_Helper_Asynchttpclient extends Mage_Core_Helper_Abstract
 
         if ($fp) {
             fwrite($fp, $raw);
+
+            // Read the response so that the socket does not override the next batch
+            while (!feof($fp)) {
+                $response = fgets($fp, 1024);
+            }
+            
             fclose($fp);
         }
     }
