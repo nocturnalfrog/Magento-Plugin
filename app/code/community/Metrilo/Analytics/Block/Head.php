@@ -18,7 +18,6 @@ class Metrilo_Analytics_Block_Head extends Mage_Core_Block_Template
      */
     public function getEvents()
     {
-        $helper = Mage::helper('metrilo_analytics');
         $events = (array)Mage::getSingleton('core/session')->getData(self::DATA_TAG);
         // clear events from session ater get events once
         Mage::getSingleton('core/session')->setData(self::DATA_TAG,'');
@@ -38,7 +37,10 @@ class Metrilo_Analytics_Block_Head extends Mage_Core_Block_Template
         $request = Mage::app()->getRequest();
         $storeId = $helper->getStoreId($request);
 
-        if($helper->isEnabled($storeId))
+        if($helper->isEnabled($storeId)) {
             return $html;
+        }
+
+        return "";
     }
 }

@@ -12,51 +12,29 @@ class Metrilo_Analytics_Helper_Asynchttpclient extends Mage_Core_Helper_Abstract
     * @param String $url
     * @return void
     */
-    public function get($url)
+    public function get($url, $async = true)
     {
         $parsedUrl = parse_url($url);
         $raw = $this->_buildRawGet($parsedUrl['host'], $parsedUrl['path']);
 
-        $fp = fsockopen(
-            $parsedUrl['host'],
-            isset($parsedUrl['port']) ? $parsedUrl['port'] : 80,
-            $errno, $errstr, 30);
-
-        if ($fp) {
-            fwrite($fp, $raw);
-            fclose($fp);
-        }
+        $this->_executeRequest($parsedUrl, $raw, $async);
     }
 
     /**
-    * Create HTTP POSTasync request to URL
-    *
-    * @param String $url
-    * @param Array $bodyArray
-    * @return void
+     * Create HTTP POSTasync request to URL
+     * @param string $url
+     * @param $bodyArray
+     * @param bool $async
+     * @return void
     */
-    public function post($url, $bodyArray = false)
+    public function post($url, $bodyArray = false, $async = true)
     {
         $parsedUrl = parse_url($url);
         $encodedBody = $bodyArray ? json_encode($bodyArray) : '';
 
         $raw = $this->_buildRawPost($parsedUrl['host'], $parsedUrl['path'], $encodedBody);
 
-        $fp = fsockopen(
-            $parsedUrl['host'],
-            isset($parsedUrl['port']) ? $parsedUrl['port'] : 80,
-            $errno, $errstr, 30);
-
-        if ($fp) {
-            fwrite($fp, $raw);
-
-            // Read the response so that the socket does not override the next batch
-            while (!feof($fp)) {
-                $response = fgets($fp, 1024);
-            }
-            
-            fclose($fp);
-        }
+        $this->_executeRequest($parsedUrl, $raw, $async);
     }
 
     private function _buildRawGet($host, $path)
@@ -82,5 +60,28 @@ class Metrilo_Analytics_Helper_Asynchttpclient extends Mage_Core_Helper_Abstract
         $out .= $encodedCall;
 
         return $out;
+    }
+
+    private function _executeRequest($parsedUrl, $raw, $async = true)
+    {
+        $fp = fsockopen($parsedUrl['host'],
+                        isset($parsedUrl['port']) ? $parsedUrl['port'] : 80,
+                        $errno, $errstr, 30);
+
+        if ($fp) {
+            fwrite($fp, $raw);
+
+            if (!$async) {
+                $this->_waitForResponse($fp);
+            }
+
+            fclose($fp);
+        }
+    }
+
+    private function _waitForResponse($fp) {
+        while (!feof($fp)) {
+            fgets($fp, 1024);
+        }
     }
 }

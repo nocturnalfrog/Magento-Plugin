@@ -22,8 +22,8 @@ class Metrilo_Analytics_Adminhtml_AjaxController extends Mage_Adminhtml_Controll
             $chunkId = (int)$this->getRequest()->getParam('chunk_id');
             // Get orders from the Database
             $orders = $import->getOrders($storeId, $chunkId);
-            // Send orders via API helper method
-            $helper->callBatchApi($storeId, $orders);
+            // Send orders via API helper method (last parameter shows synchronity)
+            $helper->callBatchApi($storeId, $orders, false);
             $result['success'] = true;
         } catch (Exception $e) {
             Mage::logException($e);

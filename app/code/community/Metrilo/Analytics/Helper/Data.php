@@ -163,20 +163,20 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
      * @param Array(Mage_Sales_Model_Order) $orders
      * @return void
      */
-    public function callBatchApi($storeId, $orders)
+    public function callBatchApi($storeId, $orders, $async = true)
     {
         try {
             $ordersForSubmition = $this->_buildOrdersForSubmition($orders);
             $call = $this->_buildCall($storeId, $ordersForSubmition);
 
-            $this->_callMetriloApiAsync($storeId, $call);
+            $this->_callMetriloApi($storeId, $call, $async);
         } catch (Exception $e) {
             Mage::log($e->getMessage(), null, 'Metrilo_Analytics.log');
         }
     }
 
     // Private functions start here
-    private function _callMetriloApiAsync($storeId, $call) {
+    private function _callMetriloApi($storeId, $call, $async = true) {
         ksort($call);
 
         $basedCall = base64_encode(Mage::helper('core')->jsonEncode($call));
