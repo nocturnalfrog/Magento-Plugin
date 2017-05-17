@@ -21,11 +21,11 @@ class Metrilo_Analytics_Helper_Asynchttpclient extends Mage_Core_Helper_Abstract
     }
 
     /**
-    * Create HTTP POSTasync request to URL
-    *
-    * @param String $url
-    * @param Array $bodyArray
-    * @return void
+     * Create HTTP POSTasync request to URL
+     * @param string $url
+     * @param $bodyArray
+     * @param bool $async
+     * @return void
     */
     public function post($url, $bodyArray = false, $async = true)
     {
