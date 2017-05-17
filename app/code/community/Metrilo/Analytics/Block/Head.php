@@ -37,7 +37,10 @@ class Metrilo_Analytics_Block_Head extends Mage_Core_Block_Template
         $request = Mage::app()->getRequest();
         $storeId = $helper->getStoreId($request);
 
-        if($helper->isEnabled($storeId))
+        if($helper->isEnabled($storeId)) {
             return $html;
+        }
+
+        return "";
     }
 }
