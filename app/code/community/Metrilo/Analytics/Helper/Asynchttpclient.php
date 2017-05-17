@@ -17,7 +17,7 @@ class Metrilo_Analytics_Helper_Asynchttpclient extends Mage_Core_Helper_Abstract
         $parsedUrl = parse_url($url);
         $raw = $this->_buildRawGet($parsedUrl['host'], $parsedUrl['path']);
 
-        $this->_executeRequest($parsedUrl, $raw, $async)
+        $this->_executeRequest($parsedUrl, $raw, $async);
     }
 
     /**
@@ -34,7 +34,7 @@ class Metrilo_Analytics_Helper_Asynchttpclient extends Mage_Core_Helper_Abstract
 
         $raw = $this->_buildRawPost($parsedUrl['host'], $parsedUrl['path'], $encodedBody);
 
-        $this->_executeRequest($parsedUrl, $raw, $async)
+        $this->_executeRequest($parsedUrl, $raw, $async);
     }
 
     private function _buildRawGet($host, $path)
