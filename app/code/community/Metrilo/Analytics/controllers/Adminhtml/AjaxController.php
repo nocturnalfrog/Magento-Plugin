@@ -30,4 +30,9 @@ class Metrilo_Analytics_Adminhtml_AjaxController extends Mage_Adminhtml_Controll
         }
         $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
     }
+
+    protected function _isAllowed()
+    {
+	return true;
+    }
 }
