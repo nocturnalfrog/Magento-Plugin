@@ -17,24 +17,19 @@
             <show_in_store>1</show_in_store>
             <tab>metrilo_analytics</tab>
             <groups>
+                <hint>
+                    <sort_order>0</sort_order>
+                    <frontend_model>metrilo_analytics/adminhtml_system_config_form_hint</frontend_model>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                </hint>
                 <settings>
                     <label>General settings</label>
                     <sort_order>10</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
-                    <comment>
-                        <![CDATA[
-                        <div id="metrilo-info">
-                            <img src="/skin/adminhtml/default/default/metrilo/favicon-metrilo.png" alt="Metrilo" />
-                            <div class="text">
-                                This module was developed by <a href="http://metrilo.com" target="_blank">Metrilo.com</a><br />
-                                If you encounter any issues, let us know at <a href="mailto:support@metrilo.com">support@metrilo.com</a>. We'll be happy to assist you!
-                            </div>
-                        </div>
-                        <div style="clear:both;"></div>
-                        ]]>
-                    </comment>
                     <fields>
                         <enable>
                             <label>Enabled</label>

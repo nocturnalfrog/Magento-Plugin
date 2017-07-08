@@ -3,6 +3,7 @@ app/etc/modules/Metrilo_Analytics.xml          app/etc/modules/Metrilo_Analytics
 app/design/frontend/base/default/layout/metrilo_analytics.xml app/design/frontend/base/default/layout/metrilo_analytics.xml
 app/design/frontend/base/default/template/metrilo/head.phtml app/design/frontend/base/default/template/metrilo/head.phtml
 app/design/adminhtml/default/default/template/metrilo/system/config/button.phtml app/design/adminhtml/default/default/template/metrilo/system/config/button.phtml
+app/design/adminhtml/default/default/template/metrilo/system/config/hint.phtml app/design/adminhtml/default/default/template/metrilo/system/config/hint.phtml
 app/design/adminhtml/default/default/layout/metrilo_analytics.xml app/design/adminhtml/default/default/layout/metrilo_analytics.xml
 skin/adminhtml/default/default/metrilo/styles.css skin/adminhtml/default/default/metrilo/styles.css
 skin/adminhtml/default/default/metrilo/logo.png skin/adminhtml/default/default/metrilo/logo.png
