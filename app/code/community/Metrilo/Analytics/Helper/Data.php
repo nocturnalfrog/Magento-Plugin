@@ -129,11 +129,12 @@ class Metrilo_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
             if (in_array($item->getSku(), $skusAdded)) continue;
 
             $skusAdded[] = $item->getSku();
+			$itemPrice = (float)($item->getPrice()) ? $item->getPrice() : $item->getProduct()->getFinalPrice();
             $dataItem = array(
-                'id'        => $item->getProductId(),
-                'price'     => (float)$item->getPrice() ? $item->getPrice() : $item->getProduct()->getFinalPrice(),
-                'name'      => $item->getName(),
-                'url'       => $item->getProduct()->getProductUrl(),
+                'id'        => (string)$item->getProductId(),
+                'price'     => (float)$itemPrice,
+                'name'      => (string)$item->getName(),
+                'url'       => (string)$item->getProduct()->getProductUrl(),
                 'quantity'  => (int)$item->getQtyOrdered()
             );
             if ($item->getProductType() == 'configurable' || $item->getProductType() == 'grouped') {
