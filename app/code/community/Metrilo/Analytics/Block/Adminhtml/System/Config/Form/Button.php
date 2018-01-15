@@ -73,7 +73,7 @@ class Metrilo_Analytics_Block_Adminhtml_System_Config_Form_Button extends Mage_A
     */
     public function getAjaxUrl()
     {
-        return Mage::helper('adminhtml')->getUrl("metrilo_analytics/adminhtml_ajax", array('isAjax'=> true));
+        return Mage::helper('adminhtml')->getUrl("adminhtml/ajax", array('isAjax'=> true));
     }
 
     /**

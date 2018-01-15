@@ -106,13 +106,13 @@
     </global>
     <admin>
         <routers>
-            <metrilo_analytics>
-                <use>admin</use>
+            <adminhtml>
                 <args>
-                    <module>Metrilo_Analytics</module>
-                    <frontName>metrilo_analytics</frontName>
+                    <modules>
+                        <custom_module after="Mage_Adminhtml">Metrilo_Analytics_Adminhtml</custom_module>
+                    </modules>
                 </args>
-            </metrilo_analytics>
+            </adminhtml>
         </routers>
     </admin>
     <adminhtml>
